@@ -1,4 +1,4 @@
-# Programming Methodology 
+# APM-1 
 
 ## Contents
 
@@ -431,40 +431,6 @@ pdf 참조
 
 
 
-### Floyd Warshall Algorithm
-All pair shortest path with DP
-
-기본 가정: no negative cycle 
-
- 먼저 주어진 그래프에 대한 edge정보로 부터 matrix $C$ 정의 
-$$
-C_{ij} = \left \{ 
-\begin{matrix}
-0 & \text{if } i=j \\
-c(i,j) \ge 0 & \text{if } i \ne j, (i,j) \in E  \\
-\infty & \text{if } i \ne j, (i,j) \notin E \\
-\end{matrix}\right.
-$$
-$d_{ij}^{(k)}$: $v_i  \text{~} v_j$ 까지 가는데 $v_1, .., v_k$를 거쳐가는지에 대한 유무가 update된 shortest path distance ($k$ 가 증가함에따라 점점 더 많은 노드정보를 거쳐가는것에 대한 정보를 업데이트 된다).
-
-![그림](C:/Git/master_exam/image/floyd_overview.jpg)
-$$
-d_{ij}^{(k)} = \left \{ 
-\begin{matrix}
-c(i,j) \ge 0 & \text{if } k=0 \\
-min \{ d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)}   \} & \text{if } k \ge 1  \\
-\end{matrix} \right.
-$$
-Time complexity: $O(n^3)$ because all entry $(1\le i,j,k\le n)$ ,  is $n^3$, each entry takes $O(n)$ time
-
-backpropagation: $P^{(k)}$의 각 entry $P_{ij}^{(k)}$가 의미하는것은 현재까지 업데이트된 $v_k$ 를 지나는 $v_i \text{~}v_j$ 의 shortest path 정보를 의미한다. ($k = 1,..,n$ 까지 모두 update되어야 진짜 shortest path가 됨)
-
-![algorithm](C:/Git/master_exam/image/floyd.PNG)
-
-[python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/ApSP_FloydWarshall.ipynb)  [c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/FloydWarshall.cpp) 
-
-
-
 ###  0 - 1 knapsack
 
 0-1 Knapsack problem is not satisfied with Greedy choice property
@@ -710,7 +676,47 @@ knapsack(V, W, n, maxW) {
 
 
 
-## Graph  
+## Graph 
+
+### Implementation Pros and Cons
+
+*Describe the linked list representation of a graph*
+
+각 정점에 인접한 정점들을 2차원 배열의 자료구조로 표현하는 방법이다.
+
+정점의 개수가 n개인 그래프가 주어졌을 때 n$\times$ n matrix를 준비한다.
+
+가중치가 없는 그래프라면 가중치의 값을 항상 1로 할당한다.
+
+정점 i에서 정점 j로 가는 간선이 존재하면 그 가중치의 값을 원소의 값으로 할당한다.
+
+간선이 존재하지 않으면 값을 0으로 할당한다.
+
+- Advantage
+  - 간선의 존재여부를 확인하는데 상수 시간 (O(1))이 소요된다. 
+- Disadvantage
+  - 그래프를 생성하는데 $n^2$ 의 메모리와 O($n^2$) 의 시간이 소요된다.
+
+*Describe the adjacency matrix representation of a graph*
+
+각 정점에 인접한 정점들을 리스트로 표현하는 방법이다.
+
+정점의 개수가 n개인 그래프에서 n 길이의 list를 준비한다.
+
+각 정점에 인접한 정점들을 연결리스트로 매단다.
+
+각 노드는 정점번호, 가중치, 다음 정점의 포인터 로 구성된다.
+
+필요한 총 노드 수는 총 간선수의 두배이다.
+
+- Advantage
+  - 그래프를 생성하는데 2|E|만큼의 메모리가 소요되므로 간선 수가 적은 경우 유용하다.
+  - 
+- Disadvantage
+  - 간선 수가 많은 경우 (|E| > |V|) 오히려 필요한 오버헤드가 크다.
+  - 간선의 존재여부를 확인 하는데 O(n) 시간이 소요된다. 
+
+
 
 ### BFS
 
@@ -924,7 +930,7 @@ Topological sort를 한 List 순으로 진행되므로  $T(n) =O(V + E)$
 
 **기본가정: 모든 edge가 non negative 이어야함** (가중치가 음수인 경우 작동하지 않는다)
 
-priority Queue 를 이용한 알고리즘 
+priority queue 를 이용한 알고리즘 
 
 ```python
 # version 1 
@@ -935,7 +941,7 @@ Dijkstra(G, s)
      
     # vertices in set S have already shortest path distance
     create set S 
-    # priority queue Q(min heap)의 {key=vertex, value=d[vertex]}
+    # priority queue Q(min heap)의 {key=vertex, value=vertex.d]}
     # value가 낮을 수록 priority is higher 
     create priority queue Q
     Q ← all G.V 
@@ -979,4 +985,432 @@ version 1 의 time complexity 로 설명하면, $O((|V|+|E|)log|V|)$
 
 
 
+### All pair shortest path
+
+#### Naive DP
+
+$ l_{ij}^{(m)}$ node $i$ 부터 node $j$ 까지 가는데 최대  $m$ 개의 edge를 거쳐서 가는 path의 minimum weight 
+
+> [intution]
+>
+> 이때, 총 노드의수 를 $n$ 이라하면, 거쳐가는 edge의 수 $m$이 $n-1$보다 많으면 반복되는 node가 존재한다는 뜻이므로 cycle이 있다는 뜻인데, negative edge가 없다고 가정했으므로 당연히 cycle을 돌면 shortest path의 wieght sum 보다 높은 path sum이 된다.  즉, $m = n - 1$ 까지 update하면 optimal solution이 됨
+
+$ {min}{(l_{ij}^{(m-1)},  \underset{1 \le k \le n}{min}{(l_{ij}^{(m-1)} + w_{kj} )} )}  = \underset{1 \le k \le n}{min}{(l_{ij}^{(m-1)} + w_{kj} )} ~~~~ \text{if } m \ge 1$ 
+
+$\because k = j $ 이면 $w_{jj}=0$ 이 되므로 case가 합쳐질수 있다. 
+
+따라서, recursive formula 는 다음과 같다.  
+$$
+l_{ij}^{(m)} =
+\begin{cases}
+\underset{1 \le k \le n}{min}{(l_{ij}^{(m-1)} + w_{kj})} & \text{if } m \ge 1  \\
+l_{ij}^{(0) } = 
+	\begin{cases} 
+		0 & \text{if } i = j\\ 
+		\infty & \text{if } i \neq j
+    \end{cases} & \text{if } m = 0  \\
+\end{cases}
+$$
+
+여기서 또 주목할 만한점은 $m=1 $ 일때는 $l_{ij}^{(1)} = w_{ij}$ 이므로 $l_{ij}^{(0)}$을 굳이 계산할 필욘 없다.
+
+$O(n^4)$ 이 걸리는 아주 비싼 알고리즘이다.  $ \because n^3$ entries, each entry takes $O(n)$
+
+```
+# update next step for m 
+update(L,W)
+	n = len(L)
+	let L'[1..n, 1..n] be a new array
+	for i = 1 to n 
+		for j = 1 to n 
+			L'[i,j] = INF
+			# each entry can be calculated in O(n)
+            for k = 1 to n 
+            	L'[i,j] = min(L'[i.j], L[i.j] + W[k,j])
+    return L'
+
+# given a graph's weight matrix W[1..n, 1..n]
+APSP(W)
+	n = len(W)
+	let L[1..n, 1..n] be a  new array
+	
+	# initialization
+	L = W
+	
+	# update L for m 
+	for m = 2 to n-1
+		L =  update(L, W)
+    
+    retrun L
+```
+
+[python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/ApSP_FindingSP.ipynb)
+
+
+
+$m$ 에 대해 linear 하게 update 하는 위의 방식을 조금 더 개선해보자. 
+
+L 의 계산이 *associative*한 성질을 가지며, $m \ge n - 1$이면 shortest path weight는 고정되어 L 은 바뀌지 않는다.
+
+따라서, associative 하게 $k$번 계산하여 $2^k \ge n-1$ 일 경우 optimal sol으로 고정된다.
+
+따라서, optimal sol에 도달하기 까지$k = O(logn)$ 번 연산하게 됨.  
+$$
+\begin{aligned}
+L^{(1)} &= W \\
+L^{(2)} &= W^2 = WW \\
+L^{(4)} &= W^4 = W^2W^2\\
+... \\
+L^{(2^k)} &= W^{2^k} = W^kW^k\\
+L^{(2^k \ge~ n-1)} &= W^{2^k \ge ~ n-1} (fixed)\\
+\end{aligned}
+$$
+
+```
+# given a graph's weight matrix W[1..n, 1..n]
+faster_APSP(W)
+	n = len(W)
+	let L[1..n, 1..n] be a  new array
+	
+	# initialization
+	L = W
+	
+	# update L for m 
+	for m = 2 < n-1
+		L =  update(L, L)
+		m = m*2
+    
+    retrun L
+```
+
+$O(n^3logn)$ 으로 계선되었지만 여전히 비싼 알고리즘이다. 
+
+
+
+#### Floyd Warshall Algorithm
+
+All pair shortest path with DP 를 조금더 효율적으로 해보자는 접근
+
+**기본 가정: no negative cycle** 
+
+ 먼저 주어진 그래프에 대한 edge정보로 부터 matrix $C$ 정의 
+$$
+C_{ij} = \left \{ 
+\begin{matrix}
+0 & \text{if } i=j \\
+c(i,j) \ge 0 & \text{if } i \ne j, (i,j) \in E  \\
+\infty & \text{if } i \ne j, (i,j) \notin E \\
+\end{matrix}\right.
+$$
+$d_{ij}^{(k)}$: $v_i  \text{~} v_j$ 까지 가는데 $v_1, .., v_k$를 거쳐가는지에 대한 유무가 update된 shortest path distance ($k$ 가 증가함에따라 점점 더 많은 노드정보를 거쳐가는것에 대한 정보를 업데이트 된다).
+
+![그림](C:/Git/master_exam/image/floyd_overview.jpg)
+$$
+d_{ij}^{(k)} = \left \{ 
+\begin{matrix}
+c(i,j) \ge 0 & \text{if } k=0 \\
+min \{ d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)}   \} & \text{if } k \ge 1  \\
+\end{matrix} \right.
+$$
+Time complexity: $O(n^3)$ because all entry $(1\le i,j,k\le n)$ ,  is $n^3$, each entry takes $O(n)$ time
+
+backpropagation: $P^{(k)}$의 각 entry $P_{ij}^{(k)}$가 의미하는것은 현재까지 업데이트된 $v_k$ 를 지나는 $v_i \text{~}v_j$ 의 shortest path 정보를 의미한다. ($k = 1,..,n$ 까지 모두 update되어야 진짜 shortest path가 됨)
+
+![algorithm](C:/Git/master_exam/image/floyd.PNG)
+
+[python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/ApSP_FloydWarshall.ipynb)  [c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/FloydWarshall.cpp) 
+
+
+
+#### Johnson
+
+Dijkstra 와 BallmanFord를 이용한 알고리즘
+
+[c++ ](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/Johnson.cpp) [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/ApSP_Johnson.ipynb)
+
+
+
 ### MST
+
+MST(Minimum Spanning Tree) 를 구하는 것
+
+기본 용어 설명
+> *light edge*: 어떤 정점 집합을 둘로 나누는 *cut*을 했을때, *crossing edge* 중에 weight가 가장 작은 edge 
+>
+> *safe* 하다: weight의 sum 이 minimum을 갖는 spanning tree에 대해서 어떤 edge $(u,v)$ 를 더해도 그 특성이 유지 된다면 *safe* 하다고 한다.
+
+일반적인 MST 알고리즘은 다음과 같다
+
+```
+MST(G)
+	create set A 
+	while A does not form a spanning tree
+		find an edge (u,v) that is safe for A 
+		A = A union {(u,v)}
+    return A
+```
+
+
+
+#### Kruskal 
+
+greedy method 을 이용하여 네트워크(가중치를 간선에 할당한 그래프)의 모든 정점을 최소 비용으로 연결하는 최적 해답을 구하는 것
+
+disjoint set 자료구조를 활용하며, greedy 하게 *light edge* 를 추가하면 *safe*함을 이용함
+
+방법: <u>disjoint set 자료구조를 활용하여</u> independent 한 tree들을 만들고, <u>작은 weight를 가진 edge 순서대로</u> crossing하는 edge에 대해서 tree들을 merge해 나간다. 즉, safe 할때, merge한다.
+
+> disjoint set에 2 가지 heuritic 이 사용된다. 
+>
+> 1. path compression 
+> 2. union by rank
+>
+> 이 2가지의 heuristic을 사용하면, n 개의 disjoint set이 있을때(n 번의 makeset operation 이 수행된 상태),
+>
+> makeset, findset,union operation이 모두 m 번 call 된다고하면,  
+>
+> 전체 operation을 수행하는데 $O(m\alpha(n))$만큼의 시간이 걸린다. 
+>
+> 여기서, $\alpha(n)$ 은 $logn$ 에 upper bounded 되어있어서 효율적인 operation 수행이 된다. 
+
+```python
+DisjointSet
+	__init__(n)
+    	let parent[1..n] be a new array
+        let rank[1..n] be a new array
+        # DisjointSet을 만드는 순간 n 번의 makeset operation 
+    	for i=1 to n 
+        	rank[i] = 0
+            parent[i] = i 
+    
+    findset(u)
+    	# path compression(한번 representative를 찾을때 이어놓는다)
+    	if u != parent[u]
+        	parent[u] = findset(parent[u])
+        retun parent[u]
+	
+    union(x, y)
+    	# find each representative for the set that includes x and y
+    	x = findset(x)
+        y = findset(y)
+        
+        # union by rank(rank가 작은 disjoint set을 큰쪽에 연결)
+        # y 의 rank 가 x 보다 같거나 크면, y를 x.p 로 한다. 
+        # (rank가 같을때는 y에 연결후, y rank만 1증가) 
+        if rank[x] > rank[y]
+        	parent[y] = x 
+        else 
+        	parent[x] = y
+        if rank[x] == rank[y]
+        	rank[y] = rank[y] + 1
+
+kruskal(G)
+	# weight sum 
+    sum = 0;
+    
+    # initialization
+    create DisjointSet Ds;
+    # makeset for all v in G.V : O(V)
+    Ds ← all v in G.V 
+    create a empty MST set A 
+    
+    # preprocessing
+    # sort G.E by (weight)increasing order : O(ElogE) 
+    sort(G.E);  
+    
+    # 서로 다른 distinct component를 crossing하는 edge 중에서 
+    # weight가 가장 작은 light edge를 greedy 하게 찾는과정(DisjointSet 이용)
+    # O((V+E)α(V)) 여기서 α(V) upper bounded by O(logV)
+    for (u,v) in G.E
+        if Ds.findset(u) != Ds.findset(v) 
+            # (u,v) edge is a greedy choice 
+            # update the sum of MST weight 
+            sum = sum + w(u,v);
+            Ds.union(u, v);
+            A = A union {(u,v)}
+
+    return sum;
+```
+
+ kruskcal 알고리즘이 전체과정에서 makeset $O(|V|)$, findset $O(|E|)$, union $O(|V|)$ 번 call 되므로 
+
+kruskcal 알고리즘에서 for문에서 쓰인 disjoint set의 operation 수는 $|V|+|E|$  번이므로 
+
+time complexity는 $O((|V|+|E|)\alpha(|V|)$ 인데, 
+
+$\alpha(n)$ 은 $logn$ 에 upper bounded 되어 있고, 
+
+graph G가 connected 되어있다면,  $|E| \ge |V|-1 $ 이고, 
+
+graph G가 sparse 하다면 $|E| > |V|^2$ 이므로,  
+$$
+\begin{aligned}
+T(n) 
+&= O((V|+|E|)\alpha(|V|)) \\
+&\le O(|E|\alpha(|V|)) \\ 
+&\le O(|E|log|V|) \\
+&\le O(|E|log|E|) \\
+&\le O(|E|log|V|^2) = O(|E|log|V|)
+\end{aligned}
+$$
+
+[c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/Kruskal.cpp) [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/MST_Kruskal.ipynb)
+
+
+
+#### Prim
+
+root note $r$ 을 주면 graph $G$에서 priority queue를 이용하여 모든 vertex중에서 근접한 edge의 weight를 업데이트 해나가면서 *light edge* 를 찾아 MST를 찾는다. 즉, safe한 edge를 더해나간다.
+
+```python
+prim(G, r)
+    # MST에서 predecessor vertex를 저장하고, 업데이트 할 array
+    let parent[1..|G.V|] be a new array 
+    
+    # initialization
+    u.d = INF for all u in G.V except for k == r 
+    r.d = 0
+    parent[u] = Nan for all u in G.V 
+    
+    # priority queue Q(min heap by value)의 {key=vertex, value=vertex.d}
+    create priority queue Q 
+    Q ← all G.V 
+    
+    while !Q.empty()
+    	u = Q.pop()
+       	for v in G.adj[u]
+        	# light edge가 발견되면 v의 value를 update하고, Q에도 반영
+        	if v in Q and w(u,v) < v.d
+            	v.d = w(u,v)
+                parent[v] = u
+                # update distance of v in O(log|V|)
+                Q.update_value(v, v.d) 
+```
+
+ *light edge*를 발견하면 Q 에서 나오고 더이상 parent와 d 가 업데이트 되지 않고, 그에 해당하는 edge가 MST가 됨을 주목
+
+따라서, Q에서 모든 vertex를 꺼내면 MST가 찾아지고 binary heap을 사용했을때,  Q.pop()이나 Q.update_value 연산이 $logV$ 만큼 걸린다. 
+
+또한, 
+
+```python
+# O(VlogV)
+while !Q.empty()
+	u = Q.pop()
+	
+# adjacent list를 썻다면 O(ElogV) 
+# 왜냐하면 모든 edge를 돌게 되고, update_vale가 O(logV) 
+while !Q.empty()
+ 	u = Q.pop()
+	for v in G.adj[u]
+```
+
+따라서, $T(n) = O((V+E)logV) = O(ElogV)$   $\because $ graph G가 connected 되어있다면,  $|E| \ge |V|-1 $ 이므로
+
+
+
+### Flow Maximization
+
+**flow network (2018_2 APM hw3 참조)**
+
+**(1) flow network definition:** 그래프에는 src, sink node가 있고, edge가 있으면 nonnegative capacity 를 갖고, edge가 없으면 capacity가 0 이됨. 
+
+**flow definition:** capacity $c$ , src, sink 노드 $s, t$ 를가진 flow network $G = (V,E)$ 에 대해서 edge $E$ 를 어떤 실수값 $ \R $  로 mapping 시켜주는 함수 인데, 2가지 성질을 갖는다. 
+
+1. Capacity constraint: $ 0 \le f(u,v) < c(u,v) $  ,$\forall (u,v) \in E $
+
+   > flow 값이 제한됨
+
+2. Flow conservation: $\sum_{(u,v)\in E}{f(u,v)}  = \sum_{(v,w)\in E}{f(v,w)} $ ,$\forall v \in V - \{s,t\} $
+
+   > src, sink 를 제외한 노드 $v$에 들어온 flow 양과  나가는 flow 양이 같다. 
+
+**(2) flow maximization problem definition: **Given a flow network G with source s and sink t , find a flow of maximum value from s to t
+
+**LP formula: **$Maximize$ $\sum_{v\in V}{f(s,v)}$   $s.t$  Capacity Constarint, Flow conservation 
+
+이때, capacity 는 주어진 graph의 weights $c(u, v) = w(u,v)$
+
+< r.f. 이 문제는 residual network와 augmented path 라는 개념을 통해 ford fulkerson algorithm에 의해 풀릴 수 있다.>
+
+#### Ford Fulkerson
+
+이 알고리즘을 설명하기전에 먼저,  residual network $G_f$ 와 augmented path의 개념을 알아야한다.
+
+Definition of $G_f$: 주어진 flow network $G$ 와 동일한 정점과 간선을 갖는다. 그리고,  
+
+residual capacity 정의는 다음과 같다.  
+
+(주의사항: edge가 $(u,v),(v,u)$ 둘다 있을때는 $c_f(u,v)  = c(u,v) - f(u,v) + f(v,u)$ ) 
+$$
+c_f(u,v) = \left \{ \begin{matrix}
+c(u,v) - f(u,v)  & \text{if } (u,v) \in E \\ 
+f(v,u) & \text{if } (v,u) \in E \\
+0 & \text{o.w } \\
+\end{matrix} \right.
+$$
+
+> augmented path는 src $s$ 에서 sink $t$ 까지 모든 residual capacity가 0 이상인 simple path를 말한다.  
+>
+> $G_f$ 는 augmentation 연산이 superposition으로 계산될 수 있는 특성을 가진다. ($G_f$는 flow $f$에 의해 생성된 residual network 이고, $f'$ 은 $G_f$의 또 다른 flow. 따라서, flow는 포화 될때 까지 계속 augmented될 수있다.) 
+>
+> |$f \uparrow f $| $=  |f| + |f'|$ 
+>
+> augmentation 연산을 다음과 같다.
+> $$
+> f \uparrow f' (u,v) = \left \{ \begin{matrix}
+> f(u,v) + f'(u,v) - f'(v,u) & \text{if } (u,v) \in E \\
+> 0 &\text{o.w} \\
+> \end{matrix}\right.
+> $$
+
+먼저, Ford-Fulkerson 방식에 대한 pseudo code 
+
+Time complexity: $O(|E|f^*)$ , $f^*$ 은 flow를 업데이트 한 총 횟수 (운이 나쁘면 매우 오래걸릴 수 있다.)
+
+![Ford-Fulkerson](C:/Git/master_exam/image/ford_fulkerson.jpg)
+
+
+
+#### [Edmonds-Karp algorithm](https://cp-algorithms.com/graph/edmonds_karp.html) 
+
+(Ford-Fulkerson 방법의 한가지 구현 방법) 
+
+이제, 본론으로 돌아와서 [Edmonds-Karp algorithm]([https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm](https://en.wikipedia.org/wiki/Edmonds–Karp_algorithm))의 기본 idea는 다음과 같다. 
+
+$G_f$ 에서 $s \rightarrow t$ 로 가는 path를 찾을 때, 모든 edge들의 weight를 1로 한(unit distance로 본) [BFS 알고리즘](https://gmlwjd9405.github.io/2018/08/15/algorithm-bfs.html) 을 이용함. [DFS, BFS c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/DFS_BFS.cpp)
+
+> 이때 주목해야 할 intuition은 각 iteration 마다 찾아진 augmented path 중에 적어도 한개의 edge는 saturated($c_f(e) = 0$) 되며 (왜냐하면 flow가 update 될때, $G_f$ 의 residual capacity값이 바뀌게 되는데 그에 따라 BFS 하는 방향 이 계속 바뀜 ), 점점 augmented path의 길이는 길어진다. 이때, 증가되는 augmented path의 최대 길이는 |$V$|$-1$이기 때문에 모든 iteration에서 flow가 증가한 수$ f^* $는 $O(|V||E|)$ 로 bounded 된다. 
+
+**pseudo code [ref](https://brilliant.org/wiki/edmonds-karp-algorithm/#algorithm-pseudo-code)**
+
+Edmonds($G, s, t$)
+
+​		$G_f \leftarrow G$ 
+
+​		for each edge $(u,v)$ in $G.E$
+
+​				$(u,v).f$ = 0
+
+​		# iteration
+
+​		while $\exist ~ p$ from $s$ to $t$ using $BFS(G_f)$
+
+​				$c_f(p) = min \{ c_f(u, v): (u,v) ~ in ~ p\}$
+
+​				# aumentations
+
+​				for each edge $(u,v)$ in $p$
+
+​						if $(u,v) \in G.E$
+
+​								$(u.v).f  = (u,v).f + c_f(p)$
+
+​						else 
+
+​								$(u.v).f  = (u,v).f - c_f(p)$
+
+
+
+time complexity: $O(|V||E|^2 )$ 왜냐하면, BFS 하는데 $O( |E|)$,  총 flow augmented 수 $O(|V||E|)$
+
