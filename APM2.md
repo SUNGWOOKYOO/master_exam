@@ -62,7 +62,7 @@
 
 ### Clique
 
-**Problem:** 그래프 $G = (V,E)$ 에서 size $k$짜리 Clique[^2] 가 존재하는가
+**Problem:** undirected 그래프 $G = (V,E)$ 에서 size $k$짜리 Clique[^2] 가 존재하는가
 
 **Clique is NP: ** clique인 subgraph에서 모든 pair의 vertices가 연결이 되어있는가 $O(N^2)$ 안에 확인 가능 (vertice 수를 $N$ 이라 하면)
 **Clique is Np-hard 증명 [그림 및 detail](https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/threeSAT_to_clique.html)  **
@@ -87,7 +87,7 @@
 
 ### Independent Set
 
-**Problem:**  graph $G$ 에서 size $k$ 짜리 IS[^3] 가 존재하는가
+**Problem:**  undirected  graph $G$ 에서 size $k$ 짜리 IS[^3] 가 존재하는가
 
 **IS is NP: ** IS set에서 모든 pair의 vertices가 연결이 되어있는가 $O(V^2)$ 안에 확인 가능
 
@@ -109,7 +109,7 @@ $\bar{G} = (V, \bar{E})$ 가 되는데 이 연산은 모든 vertex pair에 대�
 
 ### Vertex Cover
 
-**Problem:** graph $G$ 에서 size $k$ 인 Vertex Cover[^4]가 존재하는가에 대한 문제
+**Problem:** undirected graph $G$ 에서 size $k$ 인 Vertex Cover[^4]가 존재하는가에 대한 문제
 
 **Vertex Cover is NP: ** size $k$ 의 VC 가 주어지면, graph $G$ 의 모든 edge $(u,v)$ 마다 size $V'$의 VC set 안에 $u,v $ 둘중 하나가 포함되어있나 확인, 따라서, polynomial time 이 걸린다. naive한 알고리즘의 예로, $O(EV') = O(EV)$ 
 
@@ -152,30 +152,34 @@ $\bar{G} = (V, \bar{E})$ 가 되는데 이 연산은 모든 vertex pair에 대�
 
 **Problem:** 말 보다 수식으로 표현하는게 더 쉽다.  
 $$
-A \supset C \supset C'\text{with size k } \\
-\text{FIND } C'\text{s.t } \underset{S_i \in C'}{\cup}S_i = A
+U \supset C \supset C'\text{with size k } \\
+\text{FIND } C'\text{s.t } \underset{S_i \in C'}{\cup}S_i = U
 $$
-**SC is NP:** naive 하게 생각해보면 주어진 C'를 가지고 $\underset{S_i \in C'}{\cup}S_i = A$ 이 되는지 확인하면 된다. A에 있는 모든 원소수가 n 개라고 가정하고, 집합 C'의 원소 집합 $S_*$수를 m개 라고하면 $O(nm)$이므로 polynomial time이 걸림
+**SC is NP:** naive 하게 생각해보면 주어진 $C'$를 가지고 $\underset{S_i \in C'}{\cup}S_i = U$ 이 되는지 확인하면 된다. $U$에 있는 모든 원소수가 $n$ 개라고 가정하고, 집합 $C'$의 원소 집합 $S_*$수를 m개 라고하면 $O(nm)$이므로 polynomial time이 걸림
 
 **SC is NP-hard**
 
 **Reduction algorithm:** 
 
-size $k$ 짜리 Vertex Cover instance가 graph $G =(V, E)$에 있을때, 이를 어떻게 Set Cover 문제로 바꾸고, 어떤 instance를 만드는지에 대해 설명하겠다. 
+size $k$ 짜리 Vertex Cover instance가 undirected  graph $G =(V, E)$에 있을때, 이를 어떻게 Set Cover 문제로 바꾸고, 어떤 instance를 만드는지에 대해 설명하겠다. 
 
-Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한다. 따라서, 커버할 set $A = E$가 됨.
+Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한다. 따라서, 커버할 set $U = E$가 됨.
 
 또, $C'$ 의 각 원소집합 $ S_i $는 graph $G$에서 $v_i$ 에 incident한 edge들로 구성된다.    
 
-(G에서 전체 edge를 scan하여 A를 만들고, 각각의 vertex마다 incident한 edge를 check하는것은 polynomial time이 걸림 )
+($G$에서 전체 edge $G.E = U$로 만들고, 각각의 vertex마다 incident한 edge를 check하여 set $F=\{S_v\}|_{v \in G.V}$를 만드는것은 모든 vertex 마다 incident edge를 체크해야하는데, edge하나당 vertex 는 2개 연결되어있으므로 naive 하게 생각하면 $O(2|E|)$ 시간 필요. 따라서,  polynomial time이 걸림 )
 
 이렇게 변환된 Set Cover 문제의 size $k$는 Vertex Cover size $k$ 와 동일하다. (왜 그런지는 증명을 보면 됨)
 
 ![sc](./image/SC.PNG)
 
-**VC$\Rightarrow $ SC:** VC set의 정의는 모든 edge 에서 한쪽 정점은 반드시 VC set에 걸쳐 있다. 따라서 Vertex Set에 속한 k 개의 정점들 $v_i|_{i=1,..,,k}$에 대해 대응된 k개의  $S_i|_{i=1,..,k}$ 들만 골라서 union하면 모든 edge 원소들 A를 커버하게 된다. 
+**VC$\Rightarrow $ SC:** VC set의 정의는 모든 edge 에서 한쪽 정점은 반드시 VC set에 걸쳐 있다. 따라서 Vertex Set에 속한 k 개의 정점들 $v_i|_{i=1,..,,k}$에 대해 대응된 k개의  $S_i|_{i=1,..,k} = C'$ 들만 골라서 union하면 모든 edge 원소들 A를 커버하게 된다. 
 
-**SC $\Rightarrow $ VC:** Set Cover의 instance에서 A를 cover하는 k개의 $S_i|_{i=1,..,k}$에 대응된 vertex들 $v_i|_{i=1,..,,k}$ 집합이 VC set 을 이룬다. 왜냐하면 $S_i|_{i=1,..,k}$ 가 A를 커버한다는것은 모든 edge E를 커버한다는 것이고, S_i 는 v_i에 incident 한 vertex set으로 이루어졌으므로,  $v_i|_{i=1,..,,k}$ 역시 모든 edge를 커버하기 때문에, edge에서 정점 2개중 하나는 반드시 $v_i|_{i=1,..,,k}$에 포함된다.
+**SC $\Rightarrow $ VC:** Set Cover의 instance에서 A를 cover하는 k개의 $S_i|_{i=1,..,k} = C'$에 대응된 vertex들 $v_i|_{i=1,..,,k}$ 집합이 VC set 을 이룬다. 왜냐하면 $S_i|_{i=1,..,k} = C'$ 가 A를 커버한다는것은 모든 edge E를 커버한다는 것이고, S_i 는 v_i에 incident 한 vertex set으로 이루어졌으므로,  $v_i|_{i=1,..,,k}$ 역시 모든 edge를 커버하기 때문에, edge에서 정점 2개중 하나는 반드시 $v_i|_{i=1,..,,k}$에 포함된다.
+
+
+
+### Set Sum
 
 
 
@@ -195,7 +199,7 @@ Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한�
 
 **Ham-Path $\Rightarrow $ 3-SAT:**
 
-[한글 blog 설명](https://zeddios.tistory.com/179?category=682196)
+[한글 blog 설명](https://zeddios.tistory.com/179?category=682196) [pdf 영문 증명](https://courses.engr.illinois.edu/cs473/sp2011/Lectures/23_notes.pdf)
 
 
 
@@ -235,4 +239,240 @@ $$
 [한글 blog 설명](https://zeddios.tistory.com/176)
 
 
+
+## Approximation 
+
+NP complete 을 다루는 위해  문제 범위를 좁히기 위해 problem종류는
+
+Optimization version, Decision version, Gap version problem이 있다.
+
+또한, Algorithm은 Exact Algorithm 과 Approximation Algorithm 범주로 나뉜다.
+
+Approximation 알고리즘에 사용되는 여러 technique들이 있다.
+
+*Approximate Ratio:* $\rho \ge max(\frac{C^*}{C}, \frac{C}{C^*}) \ge 1$
+
+approximation algorithm이 exact algorithm에 비해 최대 얼마정도의 비율로 garantee 하는가를 알 수 있다.
+
+일반적으로 $\rho$-* algorithm 으로 사용 
+
+#### PTAS, FPTAS
+
+*PTAS*: Ploynomial-time approximation scheme. Input size $n$ 에 ploynomial 하다.
+
+하지만,  어떤 요소 $\epsilon$ 에따라 exponential 해지는 요소가 있다.
+
+*FTAS*: Fully polynomial-time approximation scheme. Input size $n$ 에 ploynomial 하다.
+
+하지만,  어떤 요소 $\epsilon$ 에따라 반비례하여 증가하는 요소가 있다.
+
+#### Vertex Cover
+
+임의의 edge (u,v)를 선택하여 VC set에 추가하고, graph 에서 $(u,v)$ 와 incident 한 edge들을 제거한다.
+
+```python
+VC(G)
+	# Vertex Cover 
+	create set C
+    # helper set for Vertex Cover 
+    create set E`
+    E` ← G.E
+    
+    while E != {}
+    	(u,v) ← pick one edge(E`)
+    	C = C union {u,v} # vertex 2개씩 추가된다.
+        remove from E` every edges incident on either u or v 
+    return C 
+```
+
+adjacent list 를 사용했을때 모든 graph의 node와 edge를 봐야하므로 $O(V+E)$ 
+
+[python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_NPandApprox/VertexCover.ipynb)
+
+**2-approx algorithm proof** 
+
+set $A$를 매iteration에서 $C$로 들어갈 vertex $u,v$로 이루어진 edge $(u,v)$들의 set 이라고하면
+
+set $A$의 size는 $C$ size의 절반이다. (매 vertex가 2개씩 추가되는데 $A$는 edge set 이고, $C$는 vertex set 이니까)
+$$
+|C| = 2|A|
+$$
+
+이때, $A$의 어떤 엣지라도 endpoint를 공유하지 않는다는 사실을 주목하자. 그러면 $A$의 어떤 2개의 edge 를 골라도 optimal vertex set $C^*$ 에 있는 vertex 원소 하나에 의해 cover 되지는 않는다. (즉, A의 어떤 edge든지 적어도 그중 하나의 vertex는 $C^*$ 의 원소에 있어야한다.)
+$$
+|C^*| \ge |A|
+$$
+
+따라서, 
+$$
+|C^*| \ge |A| \ge |C|/2 \\
+\Leftrightarrow \rho=2 \ge |C|/|C^*|
+$$
+
+
+#### Set Cover
+
+PTAS approximation algorithm 의 범주에 속한다. 
+
+greedy choice를 통해 approximated solution을 구한다.
+
+$U$의 원소들중 greedy choice는  커버되지 않고, 남은 원소들에 대해서 $F$ 의 원소 집합중 가장 많은 cover를 할수 있는 set 을 선택 하여 $C'$를 만들어 나간다. 
+
+*notation*
+$$
+\begin{aligned}
+U &= \{ e_1, e_2, ... e_m\} \\
+F &= \{ S_1, S_2, ... S_n\} \\
+S_i &= \{ \mbox{some elements}\} ~\forall i
+\end{aligned}
+$$
+
+```python
+SC(U, F)
+	# uncovered residual elements 
+	R = U.copy() 
+    # approximated set cover 
+    C` = {}
+    while R != {}
+    	# greedy choice: select an S in F that maximizes |S union R|
+        # 남은 element들을 최대로 cover할수있는 S 선택
+        S = F[argmax([len(Si ∩ R) fors Si in F])]
+        R ← R - S 
+        C` ← C` union {S}
+    return C`
+```
+
+while 문이 반복되는 경우의 수는 $min(|U|, |F|)$
+
+왜냐하면  $|U|$가 되는 경우는 cover 되는 원소가 매 iteration 마다 1개씩만 되는 최악의 경우고, 
+
+일반적으로 모든 element가 Set $\{S_{i} \} |_{i=1,..,|F|}$ 에 의해 cover가 되는 경우의 시간이 걸린다.
+
+greedy choice를 하는데 걸리는 시간은 $O(|U||F|)$이므로  
+
+$\because$ $F$의 원소 $S_i$ 마다 $X$와union 해봐야하는데 $S_i$에 있는 원소의 최대수는 $|U|$
+
+총 걸리는 시간은 $O(|U||F|min(|U|,|F|))$
+
+[python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_NPandApprox/SetCover.ipynb)
+
+**(ln|U|+1) - approx algorithm proof** 
+
+이 알고리즘이 끝났을때, 각 원소 $ x \in U $에 대한 cost는 다음과 같이 정의된다. 
+
+원소 $x$ 에 대해 $S_1,..., S_{i-1}$들이 Set Cover의 원소들로 선택된 이후, $S_i$ 에의해 처음 선택이 되었을 때의 cost $c_x$
+$$
+c_x = 1/|S_i - (\underset{k=1,...,i-1}{\cup}{S_k})|
+$$
+
+> Notice that $|S_i − ( S_1 ∪ S_2 ∪ ... ∪ S_{i−1})|$ is the number of elements covered for the first time by
+> $S_i$ at $i$ th iteration
+>
+> Let $c_x$ be the price allocated to element $x ∈ X$, that is covered
+> for the first time at $ i $ th iteration.
+
+![sc2](./image/sc2.PNG)
+
+전체 iteration 동안 cost $|C| = \sum_{x\in U}{c_x}$ 가 된다. 
+
+optimal case일 떄의 cost 를 $\sum_{S \in C^*} \sum_{x\in S}{c_x}$  가 되고  $S_i$ 에도 포함되고, $S_j$ 에도 포함되는 element가 존재 할수 있으므로  (1)이 된다. 
+그런데 이때, $\sum_{x\in S}{c_x} \le \sum_{i=1,..|S|}{1/i}$ 즉, harmonic sumation에 bounded 되어있으므로 ([증명](https://www.cs.dartmouth.edu/~ac/Teach/CS105-Winter05/Notes/wan-ba-notes.pdf)은 생략)  
+$$
+\begin{aligned}
+|C| &\le \sum_{S \in C^*} \sum_{x\in S}{c_x}  & (1)\\
+&\le \sum_{S \in C^*}\sum_{i=1,..|S|}{1/i} \\
+&\le |C^*|\sum_{i=1,..|S|}{1/i} &\mbox{for } \underset{S \in F}{max}{(|S|)} \\
+&\le |C^*|(ln(|S|) + 1 )\\
+&\le |C^*|(ln(|U|)  + 1 )\\
+&\Leftrightarrow \rho= (ln(|U|) +1)\ge |C|/|C^*|
+\end{aligned}
+$$
+
+$U$ 의 size가 커질수록 log scale로 approxmiation ratio가 좋지 않아지므로 
+
+*PTAS* 범주에 속하는 근사 알고리즘이다.
+
+
+
+#### Set Sum
+
+
+
+#### TSP
+
+[TSP problem](#TSP) 의 optimization problem에 대해서 special case 에 대해서 polynomial time 2 - approximation algorithm 을 구할 수 있다. 
+
+> *special 조건* : <u>connected graph G의 edge들의 weight가 triangle inequality 를 만족하는 경우</u>.
+
+> *Intutition*:  MST를 이용하여 TSP의 solution을 approximation 한다. 
+>
+> MST의 모든 edge weight의 sum은 TSP의 path 에서 edge들의 weight sum 에 의해 lower bound 되어있다. 
+>
+> 그런데, G가 triangle inequality 를 만족한다면, TSP의 cost는 MST 의 weight sum의 2배에 upper bound 된다.  이 성질을 이용하자 
+
+DFS를 이용하여 MST를 traversal 하여  한바퀴 도는 정점 sequence $P$를 찾은뒤에 $P$에서 preorder순으로 Euler tour[^6] list $T$가 곧 TSP의 approximation solution이 된다.
+
+```python
+# G is undirected weighted complete graph
+# G.E should satisfy trangular inequlity 
+TSP(G) 
+	M ← MST(G)
+    P ← Euler tour traversal of M using DFS(G,s)  
+	
+    T = []
+    for v in P
+    	if v is first appearance in P 
+        	T ← v
+    
+    # make a cycle
+    T ← s 
+    return T 
+```
+
+알고리즘은 2개의 subroutine으로 구성된다. 먼저 MST를 만드는 작업은 $O(ElogV)$로 polynomial 하고, DFS를 통한 Euler tour를 찾고, preorder를 찾아내어 $T$를 얻는 작업 역시 polynomial 하다.  
+
+[naive code](https://www.geeksforgeeks.org/travelling-salesman-problem-set-1/)
+
+**2 - approximation proof**
+$$
+\begin{aligned}
+|M| 
+&\le |OPT| \\
+|P| &= 2|M| \le 2|OPT|  &\because \mbox{visit each edge twice}\\
+|T| &\le |P| &\because \mbox{triangle inequality} \\
+\therefore |T| &\le 2|OPT| \\
+\Leftrightarrow \rho &= 2 \ge |T|/|OPT| 
+\end{aligned}
+$$
+
+
+[^6]: **Eulerian trail** (or **Eulerian path**) is a [trail](https://www.wikiwand.com/en/Trail_(graph_theory)) in a finite graph that visits every [edge](https://www.wikiwand.com/en/Edge_(graph_theory)) exactly once
+
+
+
+#### Baker's Algo for MIS
+
+Approximation Algorithm for MIS(Maximum Independent Set) on Planar Graphs
+
+
+
+## Appox Technique
+
+approximation algorithm을 design 하는데 유용한 2가지 techique 
+
+
+
+### Randomization
+
+#### Karger's Algo for Min Cut
+
+[wiki](https://www.wikiwand.com/en/Karger's_algorithm)
+
+
+
+### Linear Programming 
+
+#### Goemans Willianson Algo for Max Cut 
+
+MAX CUT problem with SDP relaxation
 

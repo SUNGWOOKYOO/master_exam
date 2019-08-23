@@ -981,7 +981,7 @@ Dijkstra(G, s)
 
 version 1 의 time complexity 로 설명하면, $O((|V|+|E|)log|V|)$
 
-[geeksforfeeks](https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/) [c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/Dijkstra.cpp) [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/SsSP_Dijkstra.ipynb)
+[geeksforfeeks](https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/) [c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/Dijkstra.cpp) [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/SsSP_Dijkstra.ipynb) [python hw](https://github.com/SUNGWOOKYOO/APMtask/tree/master/HW2_solution)
 
 
 
@@ -1155,7 +1155,7 @@ MST(G)
 
 #### Kruskal 
 
-greedy method 을 이용하여 네트워크(가중치를 간선에 할당한 그래프)의 모든 정점을 최소 비용으로 연결하는 최적 해답을 구하는 것
+greedy method 을 이용하여 네트워크(가중치를 간선에 할당한 undirected 그래프)의 모든 정점을 최소 비용(최소 경로)으로 연결하는 최적 해답을 구하는 것
 
 disjoint set 자료구조를 활용하며, greedy 하게 *light edge* 를 추가하면 *safe*함을 이용함
 
@@ -1261,7 +1261,7 @@ $$
 
 #### Prim
 
-root note $r$ 을 주면 graph $G$에서 priority queue를 이용하여 모든 vertex중에서 근접한 edge의 weight를 업데이트 해나가면서 *light edge* 를 찾아 MST를 찾는다. 즉, safe한 edge를 더해나간다.
+root note $r$ 을 주면 undirected graph $G$에서 priority queue를 이용하여 모든 vertex중에서 근접한 edge의 weight를 업데이트 해나가면서 *light edge* 를 찾아 MST를 찾는다. 즉, safe한 edge를 더해나간다.
 
 ```python
 prim(G, r)
@@ -1310,6 +1310,10 @@ while !Q.empty()
 
 
 
+[wiki ](https://www.wikiwand.com/ko/프림_알고리즘) [python hw](https://github.com/SUNGWOOKYOO/APMtask/tree/master/HW2_solution)
+
+
+
 ### Flow Maximization
 
 **flow network (2018_2 APM hw3 참조)**
@@ -1332,11 +1336,11 @@ while !Q.empty()
 
 이때, capacity 는 주어진 graph의 weights $c(u, v) = w(u,v)$
 
-< r.f. 이 문제는 residual network와 augmented path 라는 개념을 통해 ford fulkerson algorithm에 의해 풀릴 수 있다.>
+< r.f. 이 문제는 residual network와 augmenting path 라는 개념을 통해 ford fulkerson algorithm에 의해 풀릴 수 있다.>
 
 #### Ford Fulkerson
 
-이 알고리즘을 설명하기전에 먼저,  residual network $G_f$ 와 augmented path의 개념을 알아야한다.
+이 알고리즘을 설명하기전에 먼저,  residual network $G_f$ 와 augmenting path의 개념을 알아야한다.
 
 Definition of $G_f$: 주어진 flow network $G$ 와 동일한 정점과 간선을 갖는다. 그리고,  
 
@@ -1351,7 +1355,7 @@ f(v,u) & \text{if } (v,u) \in E \\
 \end{matrix} \right.
 $$
 
-> augmented path는 src $s$ 에서 sink $t$ 까지 모든 residual capacity가 0 이상인 simple path를 말한다.  
+> augmenting path는 src $s$ 에서 sink $t$ 까지 모든 residual capacity가 0 이상인 simple path를 말한다.  
 >
 > $G_f$ 는 augmentation 연산이 superposition으로 계산될 수 있는 특성을 가진다. ($G_f$는 flow $f$에 의해 생성된 residual network 이고, $f'$ 은 $G_f$의 또 다른 flow. 따라서, flow는 포화 될때 까지 계속 augmented될 수있다.) 
 >
@@ -1381,7 +1385,7 @@ Time complexity: $O(|E|f^*)$ , $f^*$ 은 flow를 업데이트 한 총 횟수 (�
 
 $G_f$ 에서 $s \rightarrow t$ 로 가는 path를 찾을 때, 모든 edge들의 weight를 1로 한(unit distance로 본) [BFS 알고리즘](https://gmlwjd9405.github.io/2018/08/15/algorithm-bfs.html) 을 이용함. [DFS, BFS c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/DFS_BFS.cpp)
 
-> 이때 주목해야 할 intuition은 각 iteration 마다 찾아진 augmented path 중에 적어도 한개의 edge는 saturated($c_f(e) = 0$) 되며 (왜냐하면 flow가 update 될때, $G_f$ 의 residual capacity값이 바뀌게 되는데 그에 따라 BFS 하는 방향 이 계속 바뀜 ), 점점 augmented path의 길이는 길어진다. 이때, 증가되는 augmented path의 최대 길이는 |$V$|$-1$이기 때문에 모든 iteration에서 flow가 증가한 수$ f^* $는 $O(|V||E|)$ 로 bounded 된다. 
+> 이때 주목해야 할 intuition은 각 iteration 마다 찾아진 augmenting path 중에 적어도 한개의 edge는 saturated($c_f(e) = 0$) 되며 (왜냐하면 flow가 update 될때, $G_f$ 의 residual capacity값이 바뀌게 되는데 그에 따라 BFS 하는 방향 이 계속 바뀜 ), 점점  augmenting path의 길이는 길어진다. 이때, 증가되는 augmenting path의 최대 길이는 |$V$|$-1$이기 때문에 모든 iteration에서 flow가 증가한 수$ f^* $는 $O(|V||E|)$ 로 bounded 된다. 
 
 **pseudo code [ref](https://brilliant.org/wiki/edmonds-karp-algorithm/#algorithm-pseudo-code)**
 
@@ -1414,3 +1418,64 @@ Edmonds($G, s, t$)
 
 
 time complexity: $O(|V||E|^2 )$ 왜냐하면, BFS 하는데 $O( |E|)$,  총 flow augmented 수 $O(|V||E|)$
+
+
+
+### Min Cut 
+
+ST-Min Cut 문제는 directed edge weighted graph $G$의 vertex set $V$를 2개의 set $S, T$로 나누는데 $S$는 $s$를 포함한 집합, $T$는 $t$를 포함한 집합이다.  이때, $S$와 $T$를 *crossing*하는 edge weight를 최소화 하고 싶은게 이 문제이다.
+
+> Given an directed (edge weighted) graph $G=(V,E)$, with a source vertex $s$ and a sink vertex $t$, compute a st-cut ($S,T$) so that the sum of the crossing edge weights is the minimum.
+
+이 문제는 Flow Maximization를 푸는 것을 이용할 수있다. 
+
+**max-flow min-cut theorem** (three conditions are equivalent)
+
+1. $f$ is a maximum flow in $G$. (flow maximization problem solution)
+
+2. The residual network $G_f$ contains no augmenting paths. (terminate condition of flow maximization)
+
+3. $|f| = c(S, T)$ for some st-cut $(S, T)$ of $G$.  (mincut problem solution)
+
+   > $ c(S, T) = \sum_{u \in S} \sum_{v \in T}{c(u,v)}$  ,여기서 $c(u,v)$ 는 residual capacity of $(u,v)$  
+
+Proof. We will prove 3 $\Rightarrow$ 1, 1 $\Rightarrow$ 2, 2 $\Rightarrow$ 3
+
+(3 $\Rightarrow$ 1) From the capacity constraint, any flow f and any st-cut $(S', T')$, we have that $|f| ≤ c(S', T').$ 
+$$
+\begin{aligned}
+\mbox{total net flow } |f| &= \sum_{u\in S'}\sum_{v\in T'}{f(u,v)} - \sum_{v\in S'}\sum_{u\in T'}{f(u,v)} \\
+&\le \sum_{u\in S'}\sum_{v\in T'}{f(u,v)} &\because |f| \ge 0 \\
+&\le  \sum_{u\in S'}\sum_{v\in T'}{c(u,v)}  &\because f(u,v) \le c(u,v)\\
+&= c(S',T')
+\end{aligned}
+$$
+
+
+From this inequality,   $|f|=c(S', T')$ implies $f$ is max flow. Thus, we have that 3 $\Rightarrow$ 1.
+
+ (1 $\Rightarrow$ 2) 모순을 이끌어 내기 위한 가정으로 1은 True인데, 2는 False라고 가정해보자. 
+
+즉, $f$ 는 $G$의 max flow인데, $G_f$ 는 augmenting path $f'$를 가진하고 하자.
+
+그러면, $G_f$의 augmenting path $f'$을 더 함으로서 $|f+f'| = |f|+|f'|$ property에 의해 $f$를 증가시킬 수 있다. 
+
+이 상황에서, 우리는 1 이 False($f$는 더이상 max flow가 아님)가 된다. 
+
+따라서, 모순이므로, 1이 True면 2는 반드시 True여야한다.
+
+(2 $\Rightarrow$ 3)  Let $S$ to be the set of vertices in $G$ that is reachable from $s$ by a path with positive edge capacities (of $G_f$), and let $T = V − S$. 
+
+![mincut](./image/mincut.PNG)
+
+2가 True이면 augmenting path가 더이상 없으므로  <u>T에 속한 v 에 절대 reachable 할수 없다.</u> 그래서, $|f| = c(S,T)$ (3 도 True)라고 할 수 있다.
+
+**만약 2가 True가 아니라면,** augmenting path가 있다는 것이고, 그말은 즉슨,  residual capacity 보다 작은 flow f(u,v) 가 존재한다는 뜻( $\exist f(u,v) < c(u,v)$)이여서 $u$에서 $v$로 갈수 있는 augmenting path가 존재하게 되어 <u>T에 속한 v 에 reachable 할수있게 된다.</u>  즉,**2가 False 가 되는 모순**이 되므로 반드시 2가 True인 상태에서 3 이 True 가 된다.
+
+
+
+### Max Cut
+
+Efficient algorithm: Goemans and Williamson (Approximate algorithm)
+
+Approximate algorithm에서 다루도록 하겠다.
