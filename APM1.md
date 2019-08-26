@@ -985,7 +985,6 @@ version 1 의 time complexity 로 설명하면, $O((|V|+|E|)log|V|)$
 
 
 
-<<<<<<< HEAD:APM1.md
 ### All pair shortest path
 
 #### Naive DP
@@ -1314,6 +1313,44 @@ while !Q.empty()
 
 
 
+**Prim algorithm correctness 증명**
+
+[proof by induction, or mathmatical induction](https://www.wikiwand.com/en/Mathematical_induction)을 이용 하여 증명하겠다!
+
+base case: 처음 시작할때 tree는 아무 노드도 없으니까 당연 optimal 
+
+induction step: k번째로 edge를 추가하려는 상황 지금까지의 알고리즘에 의한 tree는 optimal이라 가정
+
+$T^{(k)}$는 MST $T^*$의 subgraph 인 상황  
+
+알고리즘 동작대로 해보고 다음 iteration 시작하기전 $T^{(k+1)}$ 역시 $T^* $의 subgraph인지 확인하겠다. 
+
+<u>만약 알고리즘에 의해 어떤 edge $e = (u,v)$ 를 추가하는데 $e$가 $T^* $의 edge가 아니라고 가정! (모순을 찾겠다)</u>
+
+일단 $T^* \cup e$ 는 사이클이 반드시 생긴다. ($T^*$는 minimums panning tree[^2]인데 edge를 추가했으니까 )
+
+![MST](./image/prim.PNG)
+
+이 사이클 안에서 $u'$은 $T^{(k)}$ 안에 있고, $v'$ 은 $T^{(k)}$ 밖에 있는 $e$와 다른 어떤 한 edge $e'=(u',v')$ 을 고르자
+
+(회색선은  $T^{(k)}$ 의미)
+
+ 그때 prim 알고리즘에서는 weight가 작은 edge를 선택하므로 $e$를 선택 했다면 $ w(e) \le w(e')$ 인 상황이다. 
+
+$T ' = T^* - e' + e$ 라고하면, 
+
+$|T'| \le |T^*|$ 가 되므로 $T^* $는 optimal 이 아닌 모순적 상황이다.
+
+따라서, 매 iteration 마다 prim 알고리즘에 의해 추가되는 $e$는 MST $T^*$ 에 포함된 edge이다.
+
+[한글 blog 증명](https://m.blog.naver.com/PostView.nhn?blogId=babobigi&logNo=220492017389&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
+
+
+
+[^2]: 최상의 정점(중심)을 루트(Root Node)로 하고, 모든 그룹 멤버들을 자손으로 갖는 트리구조
+
+
+
 ### Flow Maximization
 
 **flow network (2018_2 APM hw3 참조)**
@@ -1420,6 +1457,30 @@ Edmonds($G, s, t$)
 time complexity: $O(|V||E|^2 )$ 왜냐하면, BFS 하는데 $O( |E|)$,  총 flow augmented 수 $O(|V||E|)$
 
 
+### Maximum Bipartite Matching
+
+bipartite그래프에서 최대한 많은 수의 matching[^1]을 찾는 문제 
+
+이 문제는 Flow Maximization를 푸는 것을 이용할 수있다.  
+
+max matching size = total net flow 를 이용한다.
+
+```markdown
+1 Given bipartite graph G
+2 Add new vertices s and t.
+3 Add an edge from s to every vertex in L.
+4 Add an edge from every vertex in R to t.
+5 Make all the capacities 1.
+6 Solve maximum network flow problem on this new graph G'
+```
+
+![maxmatching](./image/maxmatching.PNG)
+
+[pdf 영문 slide 설명](https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/matching.pdf)
+
+[^1]: A matching in a graph is a subset of its edges, no two of which share an endpoint.
+
+
 
 ### Min Cut 
 
@@ -1479,3 +1540,12 @@ From this inequality,   $|f|=c(S', T')$ implies $f$ is max flow. Thus, we have t
 Efficient algorithm: Goemans and Williamson (Approximate algorithm)
 
 Approximate algorithm에서 다루도록 하겠다.
+
+
+
+
+
+## Reference 
+
+[1]: https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/index.html	"reference blog "
+

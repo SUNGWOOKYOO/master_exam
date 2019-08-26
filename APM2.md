@@ -183,23 +183,38 @@ Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한�
 
 
 
+
+
 ### Hamiltonian Path
 
 **Problem:** <u>directed graph</u>.에서 모든 vertices 를 한번씩만 방문하는 path(Hamiltonian path)가 있는가 (cycle도 비슷하다.)
 
 **[HAMPATH is NP](https://www.geeksforgeeks.org/proof-hamiltonian-path-np-complete/): **어떤 graph에서 HAMPATH 가 주어지면, 그것은 서로 다른 vertex sequence인데, 각각의 연속된 정점 간의 edge 가 graph에 있는지 확인하는데 polynomial time이 걸린다.
 
-![그림](C:/Git/master_exam/image/hampath.jpg) 
+> Check if every vertex (except the first) appears exactly once, and that consecutive vertices are connected by a directed edge
+
+![그림](C:/Git/master_exam/image/hampath.PNG) 
 
 **Ham-Path is NP-hard**
 
-**Reduction algorithm:** 
+**Reduction algorithm:**  3-SAT의 literal $x_1, .., x_n$에 대해서m 개의 clause가 있었다면,  각 literal마다 $2m$ 개의 정점들로 구성된 양 방향 horizontal path를 만들고,  literal 순서대로 양끝을 이어 나간다. 
 
-**3-SAT$\Rightarrow $ Ham-Path:**
+![ham2](./image/hampath2.PNG)
 
-**Ham-Path $\Rightarrow $ 3-SAT:**
+그 후에, 각 clause 마다 정점을 하나씩 만들고, 3-SAT에서 $x_i$ 가 True였다면 왼쪽에서 오른쪽으로, 아니였다면 반대로 path를 만든다. 
 
-[한글 blog 설명](https://zeddios.tistory.com/179?category=682196) [pdf 영문 증명](https://courses.engr.illinois.edu/cs473/sp2011/Lectures/23_notes.pdf)
+![ham3](./image/hampath3.PNG)
+
+따라서, 다음과 같이 완성
+
+![ham4](./image/hampath5.PNG)
+
+**Ham-Path $\Rightarrow $ 3-SAT:** 만약, hamiltonian cycle에서 $x_i$ 에대한 horizontal path가 왼쪽으로 오른쪽이었다면, $x_i$ 를 True로, 아니면 False로 assign한다면 Boolean 수식은 satisfiable하게 된다. 왜냐하면 hamiltonian cycle에서 각 clause에 대한 node를 한번씩 지나게 되는데 그 한번만 지날때의 horizontal path에서 literal이 clause를 True로 만들게 된다. 따라서, 모든 clause가 True가 되어 satisfiable하다. 
+
+**3-SAT$\Rightarrow $ Ham-Path:** 
+각 horizontal path에 대응하는 literal이 True였다면 왼쪽에서 오른쪽으로 path를 결정하고,, 그게 아니면 오른쪽에서 왼쪽으로 결정한다면 결국에는 hamiltonian cycle이 된다. 
+
+[영문 설명1](https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/threeSAT_to_hamiltonianCycle.html)  [설명2](https://www.geeksforgeeks.org/proof-hamiltonian-path-np-complete/)
 
 
 
@@ -460,11 +475,72 @@ Approximation Algorithm for MIS(Maximum Independent Set) on Planar Graphs
 
 approximation algorithm을 design 하는데 유용한 2가지 techique 
 
-
-
 ### Randomization
 
-#### Karger's Algo for Min Cut
+#### Karger's Algo for ST-Min Cut
+
+non-negative undirected edge weight graph 에서 min cut을 random한 방식으로 찾는 알고리즘 
+
+```python
+Karger(G) 
+	# O(EV^2(logV)^2) 
+    for k = 1 to V^2logV
+        # one iteration takes O(ElogV)
+        while until two vertex remain
+            pick random edge (x,y) in G.E with probability ∝ its edge weight
+            if x and y are connected to a vertex v 
+                sum weight of (x,v) and (y,v)
+            merge x and y 
+```
+
+polynomial time이 걸리지만, 엄청 느린 알고리즘으로 min cut을 구했을때 제대로 구할 확률은 $1-o(1)$ 이다!
+
+**proof**
+
+$|C|$ 를 ST min cut에서의 crossing edge weight의 합이라고하자.
+
+그리고 어떤 한 vertex $u$ 와 연결된 edge들의 합($|C| $)이 
+
+$u$에 연결된 모든 light edge들의 합(optimal mincut $|C^*|$)보다 같거나 크다 점을 주목하자. 
+
+즉,  $|C^*| \le |C| = \sum_{e \in E, ~ u \in e}{e} $ 이다. 
+
+확장해서, u를 모든 vertex에 대해서 생각하면 $|V||C^*|$ 는 모든 edge의 합의 2배 $2|E|$에 upper bound된다. 
+$$
+|V||C^*| \le 2(\frac{1}{2}\sum_{u\in V} \sum_{e\in E, u \in e}{|e|}) =2|E| \\
+|C^*|/|E| \le 2/|V|
+$$
+그런데, $|C^*|/|E|$ 가 의미하는 바는 어떤 edge가 mincut $C^*$에 포함될 확률을 의미한다. 
+
+따라서, $\mathbb{P}(e_1 \notin C^*) \ge 1 - 2/|V|$  이 되고, 
+
+> merge가 반복되며 마지막 2개 남은 vertex edge들의 weight가 crossing edge의 합임을 주목
+>
+> 위의 식을 이용하여  vertex 가 merge되는 동안 min cut이 한번도 택해지지 않을 확률의 bound를 찾도록 하겠다. 이 말은 즉슨, $|C^*|$를 찾을 확률에 대한 bound를 구하겠다는 뜻. 
+
+($|V| = n$으로 두자)
+$$
+\begin{aligned}
+&\mathbb{P}(e_1 \notin C^*) \ge 1 - 2/n \\
+&\mathbb{P}(e_2 \notin C^* |e_1 \notin C^*) \ge 1 - 2/(n-1) \\
+&\mathbb{P}(e_{n-2} \notin C^* | \and_{j=1,2,..,n-3} e_{j} \notin C^*) \ge 1 - 2/3 \\
+\times&------------------- \\
+&\mathbb{P}( \and_{j=1,2,..,n-2} e_{j} \notin C^*) \ge \Pi_{j=1,..,n-2}(1-2/(n-j+1)) 
+\ge 2/(n(n-1)) \ge 2/n^2 \\
+
+\therefore  \mathbb{P}&(\mbox{이 알고리즘이 iteration 한번동안 mincut에 실패할 확률}) 
+\le 1 - 2/n^2 \\  
+\mathbb{P}&(.. k번 시행) \le (1-2/n^2)^k \\
+
+&\mbox{ when  }k = n^2logn, \\
+\mathbb{P}&(.. n^2logn 번 시행) \le (1-2/n^2)^{n^2logn} = (1-2/n^2)^{(n^2/2)2logn} = o(1) 
+
+\end{aligned}
+$$
+
+따라서,  mincut이 성공할 확률이 $1$에 가까워지는것을 증명함
+
+
 
 [wiki](https://www.wikiwand.com/en/Karger's_algorithm)
 
@@ -476,3 +552,18 @@ approximation algorithm을 design 하는데 유용한 2가지 techique
 
 MAX CUT problem with SDP relaxation
 
+
+
+
+## DM, ML algorithm
+### PageRank
+
+[python](https://github.com/SUNGWOOKYOO/2019_spring/blob/master/DM/HW4.ipynb)
+
+
+
+### Power Iteration, PCA, SVD, CUR decomposition
+
+[Power iteration python](https://github.com/SUNGWOOKYOO/2019_spring/blob/master/DM/HW9.ipynb)
+
+[PCA, SVD python](https://github.com/SUNGWOOKYOO/2019_spring/blob/master/ML/PCA_SVD.ipynb)
