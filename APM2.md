@@ -562,11 +562,65 @@ MAX CUT problem with SDP relaxation
 ## DM, ML Algorithm
 ### PageRank
 
+M 은 column stochastic matrix[^7] 이어야함 
+
+google pagerank 의 sparse matrix formulation version 을 power iteration을 통해 구한다.
+
+*풀고자하는 수식*
+
+($\delta:$ teleport probability[^8])
+$$
+\begin{aligned}
+r &= Ar \\
+A &= \beta M + (1-\beta)[1/N]_{N} \\ 
+
+\because r &= \beta Mr + (1-\beta)[1/N]_{N \times N}~ r \\
+& = \beta M + (1-\beta)[1/N]_{N} &\because \sum_i r_i = 1
+		
+\end{aligned}
+$$
+
+```python
+PageRank(N=3, delta=0.8, elipslon=1e-8)
+    M = np.array(M, dtype='f')
+    R = np.ones((N,1))*(1/N)
+    K = np.ones((N,1))*((1- delta)/N)
+    iteration = 0
+    distance = 100
+
+    while distance > elipslion:
+        prevR = R
+        R = delta * np.matmul(M,R) + K
+        iteration = iteration + 1
+        # L1 norm(euclidean distance)
+        distance = np.linalg.norm(R-prevR)
+
+    return R 
+```
+
+
+
 [python](https://github.com/SUNGWOOKYOO/2019_spring/blob/master/DM/HW4.ipynb)
 
 
 
+[^7]: 각 열의 합이 1 인 행렬. 가장 큰 eigen value는 항상 1이다. 따라서, 매 iteration마다 normalize할 필요 없다. 
+
+spider trap를 없애고, dead end 효과를 완화시키기 위해 사용됨 
+
+
+
 ### Power Iteration, PCA, SVD, CUR decomposition
+
+Power iteration 을 통한 PCA(Principal Component Analysis)
+
+$v_t = (M/||Mv_{t-1}||)v_{t-1}$ 을 수렴할때까지 power iteration을 통해 계산하면 
+
+highest eigen value를 가진 eign vector (즉, principal component)를 얻을 수 있다. 
+
+또한 $M = M - \lambda v v^T$ 와 같은 Gram schmidt process를 통해 PC 성분을 제거 후, 
+
+두번째로 높은 eigen value를 가진 eigen vector를 구할 수도 있다.  
 
 [Power iteration python](https://github.com/SUNGWOOKYOO/2019_spring/blob/master/DM/HW9.ipynb)
 
