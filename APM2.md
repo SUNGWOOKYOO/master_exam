@@ -4,7 +4,11 @@
 
 [NP Complete](#NP-Complete)
 
+[Approximation](#Approximation)
 
+[Approximation Technique](#Approx-Technique)
+
+[DM, ML Algorithm](#DM,-ML-Algorithm)
 
 ## NP Complete
 
@@ -555,7 +559,7 @@ MAX CUT problem with SDP relaxation
 
 
 
-## DM, ML algorithm
+## DM, ML Algorithm
 ### PageRank
 
 [python](https://github.com/SUNGWOOKYOO/2019_spring/blob/master/DM/HW4.ipynb)

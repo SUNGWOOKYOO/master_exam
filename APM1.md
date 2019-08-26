@@ -985,6 +985,47 @@ version 1 의 time complexity 로 설명하면, $O((|V|+|E|)log|V|)$
 
 
 
+**Dijkstra algorithm correctness 증명**
+
+proof by Induction 을 통해 증명하겠다. 
+
+loop invariant 는 매 iteration의 시작점에서 $u.d = \delta(s,u)$ 즉, shortest path distance 
+
+shortest path 가 결정된 vertex 집합을 $S$라 하고, 매 iteration 마다 정점 하나씩 추가된다.
+
+**base case:** 시작점 source vertex의 shortest distance 는 0이므로 $s.d = \delta(s,s) = 0$ correct 
+
+![dijkstra](./image/dijkstra.PNG)
+
+**Induction step:** 임의의 iteration 이전까지는 S안에 shortest path distance들이 결정된 vertex들만 들어가다가 <u>dijkstra 알고리즘에의해 처음으로 $\color{red}u.d \neq  \delta(s.u)$ 인 $\color{red}u$가 queue에서 뽑혔다고 하자.(모순을 이끌어내겠다.)</u>
+
+ 이때, $s$부터 $u$ 까지의 shortest path에서 $S$의 경계점 바로 직전과 직후의 정점 $x$와 $y$ 를 생각해 보자. 
+
+일단. $x.d = \delta(s,x)$ 가 자명하다($S$가 shortest path distance가 결정된 정점 집합이라고 했으므로)
+
+그래서, $y.d = \delta(s,x) + w(x,y) = \delta(s,y)$ 는 shortest distance 인 상황이며, 
+
+이사실과 negative edge가 없다는 사실로부터 ($\delta(y,u) \ge 0$)
+$$
+\begin{aligned}
+u.d &> \delta(s,u) = y.d + \delta(y,u)\ge y.d \\
+\therefore u.d &> y.d
+\end{aligned}
+$$
+임을 주목해보자.
+
+이 상황에서, 우리의 처음 가정이 맞다면, $u.d \le y.d $이어야한다. ( dijkstra 알고리즘에의해 처음으로  $u.d  \neq  \delta(s.u)$ 인 u가 queue에서 뽑혔다고 했으므로 $u.d$가 같거나 더 작아야한다.)
+
+하지만, 그렇지 않기 떄문에  모순이 된다. 
+
+따라서, $\color{red}u.d = \delta(s,u)$ 인 $\color{red}u$가 뽑혀야만 한다.
+
+
+
+[web 영문 설명](http://www.mathcs.emory.edu/~cheung/Courses/323/Syllabus/Graph/dijkstra3.html)
+
+
+
 ### All pair shortest path
 
 #### Naive DP
@@ -1289,7 +1330,7 @@ prim(G, r)
 
  *light edge*를 발견하면 Q 에서 나오고 더이상 parent와 d 가 업데이트 되지 않고, 그에 해당하는 edge가 MST가 됨을 주목
 
-따라서, Q에서 모든 vertex를 꺼내면 MST가 찾아지고 binary heap을 사용했을때,  Q.pop()이나 Q.update_value 연산이 $logV$ 만큼 걸린다. 
+따라서, Q에서 모든 vertex를 꺼내면 MST가 찾아지고 binary heap을 사용했을때,  Q.pop()이나 Q.update_value() 연산이 $logV$ 만큼 걸린다. 
 
 또한, 
 
@@ -1317,9 +1358,11 @@ while !Q.empty()
 
 [proof by induction, or mathmatical induction](https://www.wikiwand.com/en/Mathematical_induction)을 이용 하여 증명하겠다!
 
-base case: 처음 시작할때 tree는 아무 노드도 없으니까 당연 optimal 
+loop invariant 는 매 iteration의 시작점에서의 tree 는 MST 의 subtree 
 
-induction step: k번째로 edge를 추가하려는 상황 지금까지의 알고리즘에 의한 tree는 optimal이라 가정
+**base case:** 처음 시작할때 tree는 아무 노드도 없으니까 당연 optimal 
+
+**induction step:** k번째로 edge를 추가하려는 상황 지금까지의 알고리즘에 의한 tree는 optimal이라 가정
 
 $T^{(k)}$는 MST $T^*$의 subgraph 인 상황  
 
