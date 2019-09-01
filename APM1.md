@@ -31,7 +31,7 @@ QS(a, p, r)
 	for j = p to r-1
 		if a[j] <= a[r]
 			i += 1
-			swap(a[j], a[r])
+			swap(a[j], a[i])
     swap(a[i+1], a[r])
     q = i + 1 # a[q] finds a right position
     
@@ -91,18 +91,18 @@ intuition: quick sort에서 parition 은 $O(n)$ 번 불리게 되어있다. 이�
 
 그래서 call 되는 patition 함수들 안에서 비교되는 횟수의 합의 평균  $E[X] $가 성능을 좌우한다. 이 값을 구하기위해 그 안에서 정렬된 숫자를 $\{z_i, ...,z_j\}$ 라고 하면, 
 
-![picture](C:/Git/master_exam/image/quicksort_time1.PNG)
+![picture](./image/quicksort_time1.PNG)
 
 그리고, $E[X]$를 estimate하기위해  i.i.d. $ X_{ij} = 1$ (if $z_i$  is compared to $z_j$, o.w., 0) 를 정의하면 ($P[$ $z_i$  is compared to $z_j] = P_{ij}$ 라 하자, iid 특성은 평균값이 확률값과 같음) 
 
 $E[X] = E[\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}X_{ij}] = \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}E[X_{ij}] = $ $\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}$$P_{ij}$ 이되는데, 
 
-![picture](C:/Git/master_exam/image/quicksort_time2.PNG)
+![picture](./image/quicksort_time2.PNG)
 
 위의 그림으로 부터 알 수 있는 것은, 서로 다른 partition에 있는 $z_i$ 와 $z_j$ 는 절대 비교 안된다는 사실로부터 partition 함수 안에  $z_i$, $z_j$ 가  있어야하며 둘중 하나는 반드시 pivot이 될것 이라는 사실이다. 따라서, $j-i+1$ element 중 $z_i, z_j$가 각각 pivot으로 뽑힐 확률인 $P_{ij} = 2/(j-i+1)$  이다.
 
 다시 되돌아가서, 계산해보면,
-$\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}$$2/(j-i+1)$ $\le n\sum_{i=1}^{n} \sum_{i \le j}{2/j} = O(nlogn)$
+$\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}$$2/(j-i+1)$ $\le \sum_{i=1}^{n} \sum_{i \le j}{2/j} = O(nlogn)$
 
  더 나아가서 ...
 
@@ -119,13 +119,13 @@ Merge(A, p, q, r)
     n1 = q - p + 1
     n2 = r - q
     let L[1 .. n1 + 1] and R[1 ..n2 + 1] be new arrays
-    for i = 0 to n1
-        L[i] = A[p + i]
-    for j = 0 to n2
-        R[j] = A[q + j + 1]
+    for i = 1 to n1 
+        L[i] = A[p + i - 1]
+    for j = 1 to n2 
+        R[j] = A[q + j]
     L[n1 + 1] = Inf
     R[n2 + 1] = Inf
-    i,j = 0
+    i,j = 1
     for k = p to r
         if L[i] <= R[j]
             A[k] = L[i]
@@ -140,14 +140,14 @@ MS(A, p, r)
     q = (p + r) / 2;
     MS(A, p, q);
     MS(A, q + 1, r);
-    MS(A, p, q, r);
+    Merge(A, p, q, r);
 ```
 
 **time complexity**
 
 마스터정리를 사용하여 시간복잡도를 구해보자.
 $$
-T(n) = 2 \times T(\frac{n}{2}) + O(n)\\
+T(n) = 2 T(\frac{n}{2}) + O(n)\\
 f(n) = O(n)\\
 h(n) = n^{\log_{2}{2}} = O(n) = f(n)\\
 \therefore T(n) = O(n\log{n})
@@ -157,11 +157,12 @@ $$
 ### Heapsort
 
 ```python
+# increasing order sort를 위한 max heap 을 기준으로 설명
 heapify(A, i) 
     left = 2i
     right = 2i + 1
     
-    if left > n - 1 
+    if right > n 
     	return
     
     # find largest among A[i], A[left], A[right]
@@ -181,14 +182,14 @@ heapify(A, i)
 build_heap(A)	
 	A.heapsize = |A|
     for i = A.length / 2 downto 1 
-    	heapify(i)
+    	heapify(i)- 
         
 # divide and conquer
 make_heap(A, i)
     left = 2i
     right = 2i + 1
     
-    if left > n - 1
+    if right > n
     	return 
     
     make_heap(left)
@@ -220,7 +221,7 @@ $$
 n^{log_2^2} > logn \\ 
 \therefore T(n) = O(n)
 $$
-[divide conquer 를 통한 build heap c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/QuickSelect.cpp)
+[divide conquer 를 통한 build heap c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/Heapmain.cpp)
 
 
 
@@ -1592,3 +1593,4 @@ Approximate algorithm에서 다루도록 하겠다.
 
 [1]: https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/index.html	"reference blog "
 
+##### 
