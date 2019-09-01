@@ -571,10 +571,10 @@ google pagerank 의 sparse matrix formulation version 을 power iteration을 통
 $$
 \begin{aligned}
 r &= Ar \\
-A &= \beta M + (1-\beta)[1/N]_{N} \\ 
+A &= \delta M + (1-\delta)[1/N]_{N} \\ 
 
-\because r &= \beta Mr + (1-\beta)[1/N]_{N \times N}~ r \\
-& = \beta M + (1-\beta)[1/N]_{N} &\because \sum_i r_i = 1
+\because r &= \delta Mr + (1-\delta)[1/N]_{N \times N}~ r \\
+& = \delta M + (1-\delta)[1/N]_{N} &\because \sum_i r_i = 1
 		
 \end{aligned}
 $$
