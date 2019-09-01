@@ -404,6 +404,7 @@ LCS(X, Y)
 	m = |X|
     n = |Y|
     let c[0..m, 0..n] be a new array 
+    all c[:,:] be initialized by -INF
     # base case
     if i == 0 to m
     	c[i,0] = 0
@@ -443,7 +444,7 @@ $$
 c[i,w] = 
 \begin{cases}
 0 &\text{if }i=0 ~ \or w=0  \\
-c[i-1,w] &\text{if } w_i > w \\
+c[i-1,w] &\text{if }  i > 0 ~ \and w < w_i \\
 max(v_i + c[i-1,w-w_i], c[i-1,w]) &\text{if } i > 0 ~ \and w \ge w_i
 \end{cases}
 $$
@@ -553,7 +554,7 @@ $$
 \begin{aligned}
 L_i &=
 \begin{cases}
-\underset{0 \le k<i ~ s.t ~ a_i.s \ge a_k.f}{\max}{(L_k + 1)} & \text{if } a_0.f \le a_i.s &\text{#하나라도 compatible 한 activity존재}\\
+\underset{0 \le k<i ~ s.t ~ a_k.f \le a_i.s}{\max}{(L_k + 1)} & \text{if } a_0.f \le a_i.s &\text{#하나라도 compatible 한 activity존재}\\
 1 & \text{o.w} 
 \end{cases} \\
 result &= \underset{1 \le i \le n}{\max}{L_i}
@@ -655,6 +656,7 @@ preprocessing으로 quick sort를 이용하여 무게당 가격이 높은 순으
 notation은 [0-1 knapsack problem](#0 - 1-knapsack) 과 동일 
 
 ```python
+# assume that V[i], W[i] sort by decreasing order with (V[i]/W[i])
 knapsack(V, W, n, maxW) {
 	residualw = maxW;
     profit = 0
@@ -712,7 +714,6 @@ knapsack(V, W, n, maxW) {
 
 - Advantage
   - 그래프를 생성하는데 2|E|만큼의 메모리가 소요되므로 간선 수가 적은 경우 유용하다.
-  - 
 - Disadvantage
   - 간선 수가 많은 경우 (|E| > |V|) 오히려 필요한 오버헤드가 크다.
   - 간선의 존재여부를 확인 하는데 O(n) 시간이 소요된다. 
@@ -782,10 +783,11 @@ DFS(G, s)
 # recursive version
 # function call시 내재된 stack이용 
 Util(G, u, visited)
-	# u ← S.pop() 
+	# similar with u ← S.pop() 
     
 	# update u.d timing
     # print u
+	visited[u] = True;
     
     for v in G.adj[u]
     	if visited[u] == False
@@ -797,7 +799,7 @@ Util(G, u, visited)
 
 DFS(G, s)
 	let visited[1 ..|G.V|] be a boolean array
-    # S.push(s)
+    # similar with S.push(s)
     Util(G, s, visited)
 ```
 
@@ -835,7 +837,7 @@ TopoSort(G)
     # Let assume that the node with small number has a higher priority when DFS search  
     for u in G.V
         if (visited[u] == false)
-            # "DFS search starts at 'u' ...
+            # DFS search starts at 'u' ...
             topoDFS(G, S, visited, u)
     
     # Stack S를 뒤집은 결과를 L이라하면, 이 결과가 곧 topolgical sort 
@@ -1006,7 +1008,7 @@ shortest path 가 결정된 vertex 집합을 $S$라 하고, 매 iteration 마다
 
 그래서, $y.d = \delta(s,x) + w(x,y) = \delta(s,y)$ 는 shortest distance 인 상황이며, 
 
-이사실과 negative edge가 없다는 사실로부터 ($\delta(y,u) \ge 0$)
+이 사실과 negative edge가 없다는 사실로부터 ($\delta(y,u) \ge 0$)
 $$
 \begin{aligned}
 u.d &> \delta(s,u) = y.d + \delta(y,u)\ge y.d \\
@@ -1017,7 +1019,7 @@ $$
 
 이 상황에서, 우리의 처음 가정이 맞다면, $u.d \le y.d $이어야한다. ( dijkstra 알고리즘에의해 처음으로  $u.d  \neq  \delta(s.u)$ 인 u가 queue에서 뽑혔다고 했으므로 $u.d$가 같거나 더 작아야한다.)
 
-하지만, 그렇지 않기 떄문에  모순이 된다. 
+하지만, 그렇지 않기 때문에  모순이 된다. 
 
 따라서, $\color{red}u.d = \delta(s,u)$ 인 $\color{red}u$가 뽑혀야만 한다.
 
@@ -1329,11 +1331,13 @@ prim(G, r)
                 Q.update_value(v, v.d) 
 ```
 
- *light edge*를 발견하면 Q 에서 나오고 더이상 parent와 d 가 업데이트 되지 않고, 그에 해당하는 edge가 MST가 됨을 주목
+ *light edge*를 발견하면 Q 에서 나오고 더이상 parent와 d 가 업데이트 되지 않고, 그에 해당하는 edge가 MST가 됨을 주목하자! 
 
-따라서, Q에서 모든 vertex를 꺼내면 MST가 찾아지고 binary heap을 사용했을때,  Q.pop()이나 Q.update_value() 연산이 $logV$ 만큼 걸린다. 
+따라서, Q에서 모든 vertex를 꺼내면 MST가 찾아지는데
 
-또한, 
+이 알고리즘에 binary heap을 사용했을때,  Q.pop()이나 Q.update_value() 연산이 $logV$ 만큼 걸림을 우린 알고있다. 
+
+그래서 알고리즘 내부의 수행 시간을 생각해보면, 
 
 ```python
 # O(VlogV)
@@ -1347,7 +1351,7 @@ while !Q.empty()
 	for v in G.adj[u]
 ```
 
-따라서, $T(n) = O((V+E)logV) = O(ElogV)$   $\because $ graph G가 connected 되어있다면,  $|E| \ge |V|-1 $ 이므로
+따라서, $T(n) = O((V+E)logV) = O(ElogV)$   $\because $ graph G가 connected[^3] 되어있다면,  $|E| \ge |V|-1 $ 이므로
 
 
 
@@ -1392,6 +1396,8 @@ $|T'| \le |T^*|$ 가 되므로 $T^* $는 optimal 이 아닌 모순적 상황이�
 
 
 [^2]: 최상의 정점(중심)을 루트(Root Node)로 하고, 모든 그룹 멤버들을 자손으로 갖는 트리구조
+
+[^3]: 어떤 그래프가 [connected](https://en.wikipedia.org/wiki/Connectivity_(graph_theory)) 되었다는건 모든 정점들 간에 path가 반드시 존재하는 그래프
 
 
 
