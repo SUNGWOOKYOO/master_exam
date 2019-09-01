@@ -93,7 +93,7 @@ intuition: quick sort에서 parition 은 $O(n)$ 번 불리게 되어있다. 이�
 
 ![picture](./image/quicksort_time1.PNG)
 
-그리고, $E[X]$를 estimate하기위해  i.i.d. $ X_{ij} = 1$ (if $z_i$  is compared to $z_j$, o.w., 0) 를 정의하면 ($P[$ $z_i$  is compared to $z_j] = P_{ij}$ 라 하자, iid 특성은 평균값이 확률값과 같음) 
+그리고, $E[X]$를 estimate하기위해  i.i.d. $ X_{ij} = 1$ (if $z_i$  is compared to $z_j$, o.w., 0) 를 정의하면 ($P[$ $z_i$  is compared with $z_j] = P_{ij}$ 라 하자, iid 특성은 평균값이 확률값과 같음) 
 
 $E[X] = E[\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}X_{ij}] = \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}E[X_{ij}] = $ $\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}$$P_{ij}$ 이되는데, 
 
@@ -242,7 +242,7 @@ DP를 사용하려면 Optimal substructure, Overlapping subproblem 2가지 성�
 cut을 한 경우과 안할 경우로 나누어 더 좋은것 선택 하면 다음과 같은 식으로 reculsive formula 가능
 $r_n = \max(p_n, \underset{1 \le i < n}{\max}{(r_i + r_{n-i})}) \text{, if } n \ge 1$, 
 
-$i=n$을 포함 시키면 $p_n +r_0$이 cut을 한 경우이므로, cut에 대한 경계를 나눌 필요 없어지기 때문에 수식 간략화가 가능하다. 
+$i=n$을 포함 시키고, $r_i$부분을  $ p_i$로 바꾸고,  $ p_n +r_0 = p_n$으로 하면, 수식 간략화가 가능하다. 
 $$
 \begin{aligned} 
 r_n &= 
@@ -1593,4 +1593,3 @@ Approximate algorithm에서 다루도록 하겠다.
 
 [1]: https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/index.html	"reference blog "
 
-##### 
