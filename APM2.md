@@ -33,7 +33,6 @@
 
 > If we could solve this problem in polynomial time, we could solve all NP problems in polynomial time
 
-
 *Definition of NP-Complete*
 
  Np 이고 Np hard 를 만족하는 문제. 따라서, 이중 하나의 문제라도 polynomial time안에 풀린다는 것을 증명하면 Np-hard에 속한 모든 문제가 polynomial time안에 풀린다.
@@ -75,13 +74,13 @@
 >
 > if 3-SAT $\le_p$ Clique (3-SAT is reducible to Clique), Clique is NP-hard  (3-SAT 는 어려운 문제고, reduction algorithm 에 의해 3-SAT를 Clique로 변환가능한데, 이게 만약 polynomial 안에 풀리면, 3-SAT, Clique 모두 polynomial time안에 풀 수 있는 것임). 따라서, polynomial reduction 알고리즘과 $\Leftrightarrow$ 관계를 설명해야 함
 
-**Reduction  algorithm:** 어떤 한 3-SAT인 boolean equation $\Phi$ 가 주어졌을때, 각각의 literal 에 대해서 vertex를 만들고, 자기가 속한 clause의 literal과 다른 clause에서의 negation을 제외한 나머지 에 대해서 edge를 만든다. ($\Phi$ 안에 총 m 개의 clause가 있다면 m개의 clauter 가 생김). 이 과정은 $O(N^p)$ 걸림.
+**Reduction  algorithm:** 어떤 한 3-SAT인 boolean equation $\Phi$ 가 주어졌을때, 각각의 literal 에 대해서 vertex를 만들고, 자기가 속한 clause의 literal과 다른 clause에서의 negation을 제외한 나머지 에 대해서 edge를 만든다. ($\Phi$ 안에 총 m 개의 clause가 있다면 m개의 cluster가 생김). 이 과정은 $O(N^p)$ 걸림.
 
 (여기서 알수있는 intuition은 각 생성된 graph의 vertex가 연결되 있다면, 그에 대응하는 literal 쌍은 동시에 True)
 
-**3-SAT $\Rightarrow $  k-Clique:** 3-SAT가 satisfiable하면(각 clause 마다 적어도 하나의 literal이 True, 게다가 negation은 연결하지 않았음), (각기 다른 clause 에서 파생된 vertex는 반드시 연결되어 있기 때문에) clause의 수(m=k) 사이즈의 clique이 있을 수 밖에 없다. 
+**3-SAT $\Rightarrow $  k-Clique:** 3-SAT가 satisfiable하면(각 clause 마다 적어도 하나의 literal이 True, 게다가 negation은 연결하지 않았음), (각기 다른 clause 에서 파생된 vertex는 반드시 연결되어 있기 때문에) clause의 수(m=k) 사이즈의 clique가있을 수 밖에 없다. 
 
-**k-Clique $\Rightarrow$ 3-SAT:** k-Clique가 그래프에 있다면, (k개의 cluster에서 하나씩의 vertex가 연결이 되어 있어서 그에 대응되는 clause의 literal이 모두 True가 되므로)  $\Phi$는 satisfiable하다.
+**k-Clique $\Rightarrow$ 3-SAT:** k-Clique가 그래프에 있다면, (k개의 cluster에서 하나씩의 vertex가 연결이 되어 있어서 그에 대응되는 clause의 literal이 모두 True가 되므로)모든 clause는  True가 되어  $\Phi$는 satisfiable하다.
 
 
 
@@ -134,7 +133,7 @@ return True
 
 $\bar{G} = (V, \bar{E})$ 가 되는데 이 연산은 모든 vertex pair에 대해 edge가 존재하는지 확인하고 있다면 삭제하고, 없으면 새로 edge를 만드는 작업이므로 $O(V^2)$ 이 걸림
 
-![VC](C:/Git/master_exam/image/VC.PNG)
+![VC](./image/VC.PNG)
 
 **Clique $\Rightarrow $ VC:**  주목할점: $k-clique \Rightarrow |V|-k$ size 의 $VC$ 
 
@@ -197,7 +196,7 @@ Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한�
 
 > Check if every vertex (except the first) appears exactly once, and that consecutive vertices are connected by a directed edge
 
-![그림](C:/Git/master_exam/image/hampath.PNG) 
+![그림](./image/hampath.PNG) 
 
 **Ham-Path is NP-hard**
 
@@ -335,7 +334,7 @@ PTAS approximation algorithm 의 범주에 속한다.
 
 greedy choice를 통해 approximated solution을 구한다.
 
-$U$의 원소들중 greedy choice는  커버되지 않고, 남은 원소들에 대해서 $F$ 의 원소 집합중 가장 많은 cover를 할수 있는 set 을 선택 하여 $C'$를 만들어 나간다. 
+$U$의 원소들중 greedy choice는 커버되지 않고, 남은 원소들에 대해서 $F$ 의 원소 집합중 가장 많은 cover를 할수 있는 set 을 선택 하여 $C'$를 만들어 나간다. 
 
 *notation*
 $$
@@ -355,7 +354,7 @@ SC(U, F)
     while R != {}
     	# greedy choice: select an S in F that maximizes |S union R|
         # 남은 element들을 최대로 cover할수있는 S 선택
-        S = F[argmax([len(Si ∩ R) fors Si in F])]
+        S = F[argmax([len(Si ∩ R) for Si in F])]
         R ← R - S 
         C` ← C` union {S}
     return C`
@@ -390,7 +389,7 @@ $$
 > Let $c_x$ be the price allocated to element $x ∈ X$, that is covered
 > for the first time at $ i $ th iteration.
 
-![sc2](./image/sc2.PNG)
+![sc2](./image/SC2.PNG)
 
 전체 iteration 동안 cost $|C| = \sum_{x\in U}{c_x}$ 가 된다. 
 
