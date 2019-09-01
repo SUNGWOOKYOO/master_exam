@@ -16,7 +16,7 @@
 
 ### Quicksort (increasing order) 
 
-![qs](C:/Git/master_exam/image/quicksort_partition.PNG)
+![qs](./image/quicksort_partition.PNG)
 
 ```python
 QS(a, p, r)
@@ -1056,22 +1056,22 @@ l_{ij}^{(0) } =
 \end{cases}
 $$
 
-여기서 또 주목할 만한점은 $m=1 $ 일때는 $l_{ij}^{(1)} = w_{ij}$ 이므로 $l_{ij}^{(0)}$을 굳이 계산할 필욘 없다.
+여기서 또 주목할 만한점은 $m=1 $ 일때는 $l_{ij}^{(1)} = w_{ij}$ 이므로 $l_{ij}^{(0)}$을 굳이 계산할 필요는 없다.
 
 $O(n^4)$ 이 걸리는 아주 비싼 알고리즘이다.  $ \because n^3$ entries, each entry takes $O(n)$
 
-```
+```python
 # update next step for m 
 update(L,W)
 	n = len(L)
-	let L'[1..n, 1..n] be a new array
+	let L`[1..n, 1..n] be a new array
 	for i = 1 to n 
 		for j = 1 to n 
-			L'[i,j] = INF
+			L`[i,j] = INF
 			# each entry can be calculated in O(n)
             for k = 1 to n 
-            	L'[i,j] = min(L'[i.j], L[i.j] + W[k,j])
-    return L'
+            	L`[i,j] = min(L`[i.j], L[i.j] + W[k,j])
+    return L`
 
 # given a graph's weight matrix W[1..n, 1..n]
 APSP(W)
@@ -1110,7 +1110,7 @@ L^{(2^k \ge~ n-1)} &= W^{2^k \ge ~ n-1} (fixed)\\
 \end{aligned}
 $$
 
-```
+```python
 # given a graph's weight matrix W[1..n, 1..n]
 faster_APSP(W)
 	n = len(W)
@@ -1148,7 +1148,7 @@ c(i,j) \ge 0 & \text{if } i \ne j, (i,j) \in E  \\
 $$
 $d_{ij}^{(k)}$: $v_i  \text{~} v_j$ 까지 가는데 $v_1, .., v_k$를 거쳐가는지에 대한 유무가 update된 shortest path distance ($k$ 가 증가함에따라 점점 더 많은 노드정보를 거쳐가는것에 대한 정보를 업데이트 된다).
 
-![그림](C:/Git/master_exam/image/floyd_overview.jpg)
+![그림](./image/floyd_overview.jpg)
 $$
 d_{ij}^{(k)} = \left \{ 
 \begin{matrix}
@@ -1158,9 +1158,9 @@ min \{ d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)}   \} & \text{if } k \ge 1
 $$
 Time complexity: $O(n^3)$ because all entry $(1\le i,j,k\le n)$ ,  is $n^3$, each entry takes $O(n)$ time
 
-backpropagation: $P^{(k)}$의 각 entry $P_{ij}^{(k)}$가 의미하는것은 현재까지 업데이트된 $v_k$ 를 지나는 $v_i \text{~}v_j$ 의 shortest path 정보를 의미한다. ($k = 1,..,n$ 까지 모두 update되어야 진짜 shortest path가 됨)
+back propagation: $P^{(k)}$의 각 entry $P_{ij}^{(k)}$가 의미하는것은 현재까지 업데이트된 $v_k$ 를 지나는 $v_i \rightsquigarrow v_k \rightsquigarrow  v_j$ 의 shortest path 정보를 의미한다. ($k = 1,..,n$ 까지 모두 update되어야 진짜 shortest path가 됨)
 
-![algorithm](C:/Git/master_exam/image/floyd.PNG)
+![algorithm](./image/floyd.PNG)
 
 [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_graph/ApSP_FloydWarshall.ipynb)  [c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/graphAlgo/FloydWarshall.cpp) 
 
@@ -1185,7 +1185,7 @@ MST(Minimum Spanning Tree) 를 구하는 것
 
 일반적인 MST 알고리즘은 다음과 같다
 
-```
+```python
 MST(G)
 	create set A 
 	while A does not form a spanning tree
@@ -1375,7 +1375,7 @@ $T^{(k)}$는 MST $T^*$의 subgraph 인 상황
 
 <u>만약 알고리즘에 의해 어떤 edge $e = (u,v)$ 를 추가하는데 $e$가 $T^* $의 edge가 아니라고 가정! (모순을 찾겠다)</u>
 
-일단 $T^* \cup e$ 는 사이클이 반드시 생긴다. ($T^*$는 minimums panning tree[^2]인데 edge를 추가했으니까 )
+일단, $T^* \cup e$ 는 사이클이 반드시 생긴다. ($T^*$는 minimums panning tree[^2]인데 edge를 추가했으니까 )
 
 ![MST](./image/prim.PNG)
 
@@ -1423,7 +1423,9 @@ $|T'| \le |T^*|$ 가 되므로 $T^* $는 optimal 이 아닌 모순적 상황이�
 
 이때, capacity 는 주어진 graph의 weights $c(u, v) = w(u,v)$
 
-< r.f. 이 문제는 residual network와 augmenting path 라는 개념을 통해 ford fulkerson algorithm에 의해 풀릴 수 있다.>
+> 이 문제는 residual network와 augmenting path 라는 개념을 통해 
+>
+> Ford Fulkerson algorithm에 의해 풀릴 수 있다.
 
 #### Ford Fulkerson
 
@@ -1460,7 +1462,7 @@ $$
 
 Time complexity: $O(|E|f^*)$ , $f^*$ 은 flow를 업데이트 한 총 횟수 (운이 나쁘면 매우 오래걸릴 수 있다.)
 
-![Ford-Fulkerson](C:/Git/master_exam/image/ford_fulkerson.jpg)
+![Ford-Fulkerson](./image/ford_fulkerson.jpg)
 
 
 
