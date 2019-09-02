@@ -467,13 +467,18 @@ lookup(V, W, c, i, w)
     	c[i,w] = max(V[i] + c[i-1, w-W[i]], c[i-1, w])
 		return c[i,w]
 
-knapsack(V, W, n, maxW)
-	let c[0..n, 0..maxW] be a new array 
+knapsack(V, W)
+	n = |V|
+    # maxW = max(W[1],..,W[n])
+    maxW = max(W)
+	let c[0..n, 0..maxW] be a new array
+    all c[..] initialized by -INF
     return lookup(V, W, c, n, maxW)
         
 # bottom up
 knapsack(V, W, n, maxW)
-	let c[0..n, 0..maxW] be a new array 
+	let c[0..n, 0..maxW] be a new array
+    all c[..] initialized by -INF
     # base case
     for i = 0 to n
     	for w to maxW
