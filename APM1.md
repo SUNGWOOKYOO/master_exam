@@ -476,7 +476,9 @@ knapsack(V, W)
     return lookup(V, W, c, n, maxW)
         
 # bottom up
-knapsack(V, W, n, maxW)
+knapsack(V, W)
+    n = |V|
+    maxW = max(W)
 	let c[0..n, 0..maxW] be a new array
     all c[..] initialized by -INF
     # base case
@@ -662,7 +664,9 @@ notation은 [0-1 knapsack problem](#0 - 1-knapsack) 과 동일
 
 ```python
 # assume that V[i], W[i] sort by decreasing order with (V[i]/W[i])
-knapsack(V, W, n, maxW) {
+knapsack(V, W) {
+    n = |V|
+    maxW = max(W)
 	residualw = maxW;
     profit = 0
 	for i = 1 to n
