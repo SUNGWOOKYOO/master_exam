@@ -753,6 +753,13 @@ BFS(G, s)
 			if visited[v] == False
 				Q.push(v)
 				visited[v] = True
+
+# for forest G 
+BFSAll(G)
+	let visited[1 ..|G.V|] be a boolean array and all initialized by False
+    for s in G.V
+    	if visited[s] == False
+        	BFS(G, s, visited)
 ```
 
 adjacent list 자료구조를 사용한 graph라면 모두 한번씩 보게 되므로 $T(n) = O(|V|+|E|)$  
@@ -807,9 +814,16 @@ Util(G, u, visited)
     return 
 
 DFS(G, s)
-	let visited[1 ..|G.V|] be a boolean array
+	let visited[1 ..|G.V|] be a boolean array and all initialized by False
     # similar with S.push(s)
     Util(G, s, visited)
+
+# for forest G 
+DFSAll(G)
+	let visited[1 ..|G.V|] be a boolean array and all initialized by False
+    for s in G.V
+        if visited[s] == False
+        	DFS(G, s, visited)
 ```
 
 adjacent list 자료구조를 사용한 graph라면 모두 한번씩 보게 되므로 $T(n) = O(|V|+|E|)$  
