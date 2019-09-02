@@ -759,6 +759,7 @@ BFSAll(G)
 	let visited[1 ..|G.V|] be a boolean array and all initialized by False
     for s in G.V
     	if visited[s] == False
+            # 기존 BFS에 visited를 argument로 import하여 사용
         	BFS(G, s, visited)
 ```
 
@@ -806,8 +807,8 @@ Util(G, u, visited)
 	visited[u] = True;
     
     for v in G.adj[u]
-    	if visited[u] == False
-        	Util(G, u, visited)
+    	if visited[v] == False
+        	Util(G, v, visited)
     
     # update v.f set timing
     # ..
@@ -823,6 +824,7 @@ DFSAll(G)
 	let visited[1 ..|G.V|] be a boolean array and all initialized by False
     for s in G.V
         if visited[s] == False
+        	# same with Until(G, s, visited)
         	DFS(G, s, visited)
 ```
 
@@ -841,7 +843,7 @@ DFS 를 쓰는 application 중 한가지인 Topological sort 방법
 DAG에서 즉, 방향 그래프에 존재하는 각 정점들의 선행 순서를 위배하지 않으면서 모든 정점을 나열하는 것
 
 ```python
-topoDFS(G, S, visited, u)
+topoDFS(G, u, visited, S)
 	visited[u] = True
     for v in G.adj[u]
     	if visited[v] == False
@@ -861,7 +863,7 @@ TopoSort(G)
     for u in G.V
         if (visited[u] == false)
             # DFS search starts at 'u' ...
-            topoDFS(G, S, visited, u)
+            topoDFS(G, u, visited, S)
     
     # Stack S를 뒤집은 결과를 L이라하면, 이 결과가 곧 topolgical sort 
     while !S.empty()
