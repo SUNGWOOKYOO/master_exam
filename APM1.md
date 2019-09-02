@@ -382,14 +382,14 @@ lookup(X, Y, c, i, j)
     	return c[i,j]
     
     # i > 0 or j > 0
-    if X[i-1] == Y[j-1]
+    if X[i] == Y[j]
     	c[i,j] = lookup(X, Y, c, i-1, j-1) + 1
         return c[i,j]
     else
     	c[i,j] = max(lookup(X, Y, c, i-1, j), lookup(X, Y, c, i, j-1))
         return c[i,j]
     
-LCS(X, Y, c, m, n)
+LCS(X, Y)
 	m = |X|
 	n = |Y|
 	let c[0..m, 0..n] be a new array 
