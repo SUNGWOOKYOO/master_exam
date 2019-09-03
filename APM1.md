@@ -16,7 +16,7 @@
 
 ### Quicksort (increasing order) 
 
-![qs](./image/quicksort_partition.PNG)
+### ![qs](./image/quicksort_partition.PNG)
 
 ```python
 QS(a, p, r)
@@ -1453,7 +1453,7 @@ $|T'| \le |T^*|$ 가 되므로 $T^* $는 optimal 이 아닌 모순적 상황이�
 
 **flow definition:** capacity $c$ , src, sink 노드 $s, t$ 를가진 flow network $G = (V,E)$ 에 대해서 edge $E$ 를 어떤 실수값 $ \R $  로 mapping 시켜주는 함수 인데, 2가지 성질을 갖는다. 
 
-1. Capacity constraint: $ 0 \le f(u,v) < c(u,v) $  ,$\forall (u,v) \in E $
+1. Capacity constraint: $ 0 \le f(u,v) \le c(u,v) $  ,$\forall (u,v) \in E $
 
    > flow 값이 제한됨
 
@@ -1601,7 +1601,7 @@ Proof. We will prove 3 $\Rightarrow$ 1, 1 $\Rightarrow$ 2, 2 $\Rightarrow$ 3
 (3 $\Rightarrow$ 1) From the capacity constraint, any flow f and any st-cut $(S', T')$, we have that $|f| ≤ c(S', T').$ 
 $$
 \begin{aligned}
-\mbox{total net flow } |f| &= \sum_{u\in S'}\sum_{v\in T'}{f(u,v)} - \sum_{v\in S'}\sum_{u\in T'}{f(u,v)} \\
+\mbox{total net flow } |f| &= \sum_{u\in S'}\sum_{v\in T'}{f(u,v)} - \sum_{v\in S'}\sum_{u\in T'}{f(v,u)} \\
 &\le \sum_{u\in S'}\sum_{v\in T'}{f(u,v)} &\because |f| \ge 0 \\
 &\le  \sum_{u\in S'}\sum_{v\in T'}{c(u,v)}  &\because f(u,v) \le c(u,v)\\
 &= c(S',T')
