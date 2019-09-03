@@ -114,7 +114,7 @@ $\bar{G} = (V, \bar{E})$ 가 되는데 이 연산은 모든 vertex pair에 대�
 
 **Problem:** undirected graph $G$ 에서 size $k$ 인 Vertex Cover[^4]가 존재하는가에 대한 문제
 
-**Vertex Cover is NP: ** size $k$ 의 VC 가 주어지면, graph $G$ 의 모든 edge $(u,v)$ 마다 size $V'$의 VC set 안에 $u,v $ 둘중 하나가 포함되어있나 확인, 따라서, polynomial time 이 걸린다. naive한 알고리즘의 예로, $O(EV') = O(EV)$ 
+**Vertex Cover is NP: ** size $k$ 의 VC $V'$가 주어지면, graph $G$ 의 모든 edge $(u,v)$ 마다  $V'$안에 $u,v $ 둘중 하나가 포함되어있나 확인, 따라서, polynomial time 이 걸린다. naive한 알고리즘의 예로, $O(EV') = O(EV)$ 
 
 ```python
 #given G.E, V' in VC set,
@@ -182,7 +182,7 @@ Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한�
 
 **VC$\Rightarrow $ SC:** VC set의 정의는 모든 edge 에서 한쪽 정점은 반드시 VC set에 걸쳐 있다. 따라서 Vertex Set에 속한 k 개의 정점들 $v_i|_{i=1,..,,k}$에 대해 대응된 k개의  $S_i|_{i=1,..,k} = C'$ 들만 골라서 union하면 모든 edge 원소들 A를 커버하게 된다. 
 
-**SC $\Rightarrow $ VC:** Set Cover의 instance에서 A를 cover하는 k개의 $S_i|_{i=1,..,k} = C'$에 대응된 vertex들 $v_i|_{i=1,..,,k}$ 집합이 VC set 을 이룬다. 왜냐하면 $S_i|_{i=1,..,k} = C'$ 가 A를 커버한다는것은 모든 edge E를 커버한다는 것이고, S_i 는 v_i에 incident 한 vertex set으로 이루어졌으므로,  $v_i|_{i=1,..,,k}$ 역시 모든 edge를 커버하기 때문에, edge에서 정점 2개중 하나는 반드시 $v_i|_{i=1,..,,k}$에 포함된다.
+**SC $\Rightarrow $ VC:** Set Cover의 instance에서 A를 cover하는 k개의 $S_i|_{i=1,..,k} = C'$에 대응된 vertex들 $v_i|_{i=1,..,,k}$ 집합이 VC set 을 이룬다. 왜냐하면 $S_i|_{i=1,..,k} = C'$ 가 A를 커버한다는것은 모든 edge E를 커버한다는 것이고, $S_i$ 는 $v_i$에 incident 한 vertex set으로 이루어졌으므로,  $v_i|_{i=1,..,,k}$ 역시 모든 edge를 커버하기 때문에, edge에서 정점 2개중 하나는 반드시 $v_i|_{i=1,..,,k}$에 포함된다.
 
 
 
@@ -219,7 +219,7 @@ Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한�
 **Ham-Path $\Rightarrow $ 3-SAT:** 만약, hamiltonian cycle에서 $x_i$ 에대한 horizontal path가 왼쪽으로 오른쪽이었다면, $x_i$ 를 True로, 아니면 False로 assign한다면 Boolean 수식은 satisfiable하게 된다. 왜냐하면 hamiltonian cycle에서 각 clause에 대한 node를 한번씩 지나게 되는데 그 한번만 지날때의 horizontal path에서 literal이 clause를 True로 만들게 된다. 따라서, 모든 clause가 True가 되어 satisfiable하다. 
 
 **3-SAT$\Rightarrow $ Ham-Path:** 
-각 horizontal path에 대응하는 literal이 True였다면 왼쪽에서 오른쪽으로 path를 결정하고,, 그게 아니면 오른쪽에서 왼쪽으로 결정한다면 결국에는 hamiltonian cycle이 된다. 
+각 horizontal path에 대응하는 literal이 True였다면 왼쪽에서 오른쪽으로 path를 결정하고, 그게 아니면 오른쪽에서 왼쪽으로 결정한다면 결국에는 hamiltonian cycle이 된다. 
 
 [영문 설명1](https://opendsa-server.cs.vt.edu/ODSA/Books/Everything/html/threeSAT_to_hamiltonianCycle.html)  [설명2](https://www.geeksforgeeks.org/proof-hamiltonian-path-np-complete/)
 
@@ -234,12 +234,12 @@ Set Cover에서 커버할 모든 원소는 graph $G$의 모든 edge $E$로 한�
 
 **Reduction algorithm:** Hamiltonian Cycle 을 가진 directed graph $G = (V,E)$를  
 
-TSP instance 를 가진 graph $G' = (V,E')$ 로 바꾸기 위해선 complete undriected weight graph 로 바꿔야한다.
+TSP instance 를 가진 undirected complete weight graph $G' = (V,E')$ 로 바꿔야한다.
 
 따라서, 모든 노드들간의 edge를 만들어주되, 원래 edge가 없는데 새로 만든것은 weight를 $1$ 아니면 $0$을 부여 
 
 그렇게 만들면, TSP instance의 $k$ 값을 $0$으로 하는 instance가 있는 graph $G'$을 만들 수 있다.
->  Q : (무향 완전 가중 그래프를 주며) 이 그래프에서 모든 노드들을 한번씩만 방문하고, 그 가중치의 합이 0인게 있어? (Decision ver.) 
+>  Q : (무향 완전 가중 그래프를 주며) 이 그래프에서 모든 노드들을 한번씩만 방문하고, 그 가중치의 합이 0인게 있어? (Decision version) 
 $$
 E' = \{ (i,j): i,j \in V \and i \neq j \} \\
 c(i,j) = 
@@ -284,7 +284,7 @@ approximation algorithm이 exact algorithm에 비해 최대 얼마정도의 비�
 
 하지만,  어떤 요소 $\epsilon$ 에따라 exponential 해지는 요소가 있다.
 
-*FTAS*: Fully polynomial-time approximation scheme. Input size $n$ 에 ploynomial 하다.
+*FPTAS*: Fully polynomial-time approximation scheme. Input size $n$ 에 ploynomial 하다.
 
 하지만,  어떤 요소 $\epsilon$ 에따라 반비례하여 증가하는 요소가 있다.
 
@@ -313,9 +313,9 @@ adjacent list 를 사용했을때 모든 graph의 node와 edge를 봐야하므�
 
 **2-approx algorithm proof** 
 
-set $A$를 매iteration에서 $C$로 들어갈 vertex $u,v$로 이루어진 edge $(u,v)$들의 set 이라고하면
+**set $A$**를 매iteration에서 $C$로 들어갈 vertex $u,v$로 이루어진 **edge $(u,v)$들의 set** 이라고하면
 
-set $A$의 size는 $C$ size의 절반이다. (매 vertex가 2개씩 추가되는데 $A$는 edge set 이고, $C$는 vertex set 이니까)
+set $A$의 size는 $C$ size의 절반이다. (매 vertex가 2개씩 추가되는데 $A$는 edge set 이고, **$C$는 vertex set** 이니까)
 $$
 |C| = 2|A|
 $$
@@ -398,7 +398,7 @@ $$
 전체 iteration 동안 cost $|C| = \sum_{x\in U}{c_x}$ 가 된다. 
 
 optimal case일 떄의 cost 를 $\sum_{S \in C^*} \sum_{x\in S}{c_x}$  가 되고  $S_i$ 에도 포함되고, $S_j$ 에도 포함되는 element가 존재 할수 있으므로  (1)이 된다. 
-그런데 이때, $\sum_{x\in S}{c_x} \le \sum_{i=1,..|S|}{1/i}$ 즉, harmonic sumation에 bounded 되어있으므로 ([증명](https://www.cs.dartmouth.edu/~ac/Teach/CS105-Winter05/Notes/wan-ba-notes.pdf)은 생략)  
+그런데 이때, $\sum_{x\in S}{c_x} \le \sum_{i=1,..|S|}{1/i}$ 즉, harmonic summation에 bounded 되어있으므로 ([증명](https://www.cs.dartmouth.edu/~ac/Teach/CS105-Winter05/Notes/wan-ba-notes.pdf)은 생략)  
 $$
 \begin{aligned}
 |C| &\le \sum_{S \in C^*} \sum_{x\in S}{c_x}  & (1)\\
@@ -410,7 +410,7 @@ $$
 \end{aligned}
 $$
 
-$U$ 의 size가 커질수록 log scale로 approxmiation ratio가 좋지 않아지므로 
+$U$ 의 size가 커질수록 log scale로 approximation ratio가 좋지 않아지므로 
 
 *PTAS* 범주에 속하는 근사 알고리즘이다.
 
@@ -424,7 +424,7 @@ $U$ 의 size가 커질수록 log scale로 approxmiation ratio가 좋지 않아�
 
 [TSP problem](#TSP) 의 optimization problem에 대해서 special case 에 대해서 polynomial time 2 - approximation algorithm 을 구할 수 있다. 
 
-> *special 조건* : <u>connected graph G의 edge들의 weight가 triangle inequality 를 만족하는 경우</u>.
+> *special 조건* : <u>complete graph G의 edge들의 weight가 triangle inequality 를 만족하는 경우</u>.
 
 > *Intutition*:  MST를 이용하여 TSP의 solution을 approximation 한다. 
 >
@@ -480,7 +480,7 @@ Approximation Algorithm for MIS(Maximum Independent Set) on Planar Graphs
 
 ## Appox Technique
 
-approximation algorithm을 design 하는데 유용한 2가지 techique 
+approximation algorithm을 design 하는데 유용한 2가지 technique 
 
 ### Randomization
 
@@ -493,9 +493,10 @@ Karger(G)
 	# O(EV^2(logV)^2) 
     for k = 1 to V^2logV
         # one iteration takes O(ElogV)
-        while until two vertex remain
+        while != two vertex remain
             pick random edge (x,y) in G.E with probability ∝ its edge weight
-            if x and y are connected to a vertex v 
+            # merge process 
+            while(!∃shared vertex v such that x and y are connected to a vertex v)  
                 sum weight of (x,v) and (y,v)
             merge x and y 
 ```
@@ -510,7 +511,7 @@ $|C|$ 를 ST min cut에서의 crossing edge weight의 합이라고하자.
 
 $u$에 연결된 모든 light edge들의 합(optimal mincut $|C^*|$)보다 같거나 크다 점을 주목하자. 
 
-즉,  $|C^*| \le |C| = \sum_{e \in E, ~ u \in e}{e} $ 이다. 
+즉,  $|C^*| \le |C| = \sum_{e \in E, ~ u \in e}{|e|} $ 이다. 
 
 확장해서, u를 모든 vertex에 대해서 생각하면 $|V||C^*|$ 는 모든 edge의 합의 2배 $2|E|$에 upper bound된다. 
 $$
@@ -523,7 +524,7 @@ $$
 
 > merge가 반복되며 마지막 2개 남은 vertex edge들의 weight가 crossing edge의 합임을 주목
 >
-> 위의 식을 이용하여  vertex 가 merge되는 동안 min cut이 한번도 택해지지 않을 확률의 bound를 찾도록 하겠다. 이 말은 즉슨, $|C^*|$를 찾을 확률에 대한 bound를 구하겠다는 뜻. 
+> 위의 식을 이용하여  edge를 선택하여 2개의 vertex만 남을때까지 merge를 반복하는 동안 mincut에 포함될 edge들을 한번도 선택하지 않아 제대로된 mincut을 찾을 확률의 bound를 찾도록 하겠다. 이 말은 즉슨, $|C^*|$를 찾는데 실패할 확률에 대한 bound를 구하겠다는 뜻. 
 
 ($|V| = n$으로 두자)
 $$
