@@ -147,7 +147,7 @@ $\bar{G} = (V, \bar{E})$ 가 되는데 이 연산은 모든 vertex pair에 대�
 
 **VC $\Rightarrow $ Clique:**  주목할점: $|V|-k$ size 의 $VC$ $\Rightarrow k-clique$  
 
-만약 $u,v \notin V'$ 이면, $(u,v)\in E$ 이므로 $V-V'= A$는 Clique set 이다. 
+만약 $u,v \notin V'$ 이면, complement를 하면 $(u,v)\in E$ 가 반드시 존재하므로 $V-V'= A$는 Clique set 이다. 
 
 
 
