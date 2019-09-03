@@ -115,7 +115,7 @@ r.f. 항상좋은 quick sort 방법은? median of median 이용 [link](http://1a
 ### Mergesort
 
 ```python
-Merge(A, p, q, r)
+Merge1(A, p, q, r)
     n1 = q - p + 1
     n2 = r - q
     let L[1 .. n1 + 1] and R[1 ..n2 + 1] be new arrays
@@ -133,14 +133,33 @@ Merge(A, p, q, r)
         else
             A[k] = R[j]
             j += 1
-
+            
+Merge2(A,p,q,r)
+	i = p # 앞단의 비교 index
+    j = q + 1 # 뒷단의 비교 index
+    t = 1 # 복사 index
+    tmp = []
+    while (i <= q and j <= r) # 앞단 혹은 뒷단이 빌때까지
+    	if A[i] < A[j]
+    		tmp[t++] = A[i++]
+         else
+        	tmp[t++] = A[j++]
+    while (i <= q) # 앞단이 남은 경우
+    	tmp[t++] = A[i++]
+	while (j <= r) # 뒷단이 남은 경우
+    	tmp[t++] = A[j++]
+	i = p
+    t = 1
+    while (i <= r)
+    	A[i++] = tmp[t++]
+        
 MS(A, p, r)
     if p >= r 
         return
     q = (p + r) / 2;
     MS(A, p, q);
     MS(A, q + 1, r);
-    Merge(A, p, q, r);
+    Merge1(A, p, q, r) or Merge2(A, p, q, r);
 ```
 
 **time complexity**
