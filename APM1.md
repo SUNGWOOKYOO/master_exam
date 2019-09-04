@@ -180,7 +180,7 @@ $$
 heapify(A, i) 
     left = 2i
     right = 2i + 1
-    
+    n = |A|
     if right > n 
     	return
     
@@ -207,7 +207,7 @@ build_heap(A)
 make_heap(A, i)
     left = 2i
     right = 2i + 1
-    
+    n = |A|
     if right > n
     	return 
     
@@ -240,6 +240,8 @@ $$
 n^{log_2^2} > logn \\ 
 \therefore T(n) = O(n)
 $$
+Heapsort: $O(n) + O(nlogn) = O(nlog(n))$
+
 [divide conquer 를 통한 build heap c++](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/Heapmain.cpp)
 
 
