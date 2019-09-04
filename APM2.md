@@ -585,12 +585,12 @@ A &= \delta M + (1-\delta)[1/N]_{N} \\
 $$
 
 ```python
-PageRank(N=3, delta=0.8, elipslon=1e-8)
-    M = np.array(M, dtype='f')
+PageRank(M, delta=0.8, elipslon=1e-8)
+    N = M.shape[0]
     R = np.ones((N,1))*(1/N)
     K = np.ones((N,1))*((1- delta)/N)
     iteration = 0
-    distance = 100
+    distance = INF
 
     while distance > elipslion:
         prevR = R
