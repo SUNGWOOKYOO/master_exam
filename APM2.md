@@ -45,9 +45,7 @@
 >
 > conversely, if any one is not solvable in polynomial time, then none are.
 
-
-
-[^1]: 다항식 시간 변환은 변환이 다항식 시간안에 이루어지고 두 사례의 답의 존재성(Yes or No)이 일치하는 문제이다
+[^1]: 다항식 시간 변환은 변환이 다항식 시간안에 이루어지고 두 사례의 답의 존재성(Yes or No)이 일치도록 하는 변환이다
 
 
 

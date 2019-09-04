@@ -1,4 +1,4 @@
-# APM-1 
+# dAPM-1 
 
 ## Contents
 
@@ -13,6 +13,71 @@
 ## Sort 
 
 [c++ ](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/Sort.cpp)  [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_sort.ipynb)
+
+Selection sort 와 Insertion sort는 배열에서 가장큰 원소를 찾아 리스트의 맨뒤로 옮겨가며 문제 크기를 하나씩 줄여나간다.
+
+차이는 가장큰 원소를 리스트의 맨뒤로 옮기는 방법에 있다.
+
+### Selection sort
+
+*pseudo-code*
+
+```python
+SelectionSort(A):
+    n = A.length
+	for last = n downto 2
+    	 # find the index that has the largest value in range from 1 to last
+        largest = 1
+        for i = 2 to last
+        	if A[i] > A[largest]
+            	largest = i
+        swap (A[last],A[largest]) 
+```
+
+Running time is $O(n^2)$
+
+### Bubble sort
+
+*pseudo-code*
+
+```python
+BubbleSort(A):
+	n = A.length
+	for last = n to 2
+		# move the item until it finds a proper location
+		for i = 1 to last-1
+			if A[i] > A[i+1]
+				swap(A[i], A[i+1])
+```
+
+Running time is $O(n^2)$
+
+### Insertion sort
+
+이미 정렬되있는 i길이의 리스트에 i+1원소를 알맞은 자리에 삽입해가며 정렬하는 방법이다.
+
+```python
+InsertionSort(A)
+	n = A.length
+	for i = 2 to n
+    	# assume the list is well sorted until i - 1 length
+        last = i-1
+        newitem = A[i]
+        # insert a new ith item into a proper location
+        # 1부터 i-1 까지중 알맞은 자리가 있는지 찾는다
+		while (last >= 1 and  newitem < A[last])
+        	#알맞은 자리가 있다면 한자리씩 last부터 알맞은 자리까지 옮겨온다. 
+        	swap(A[last + 1], A[last])
+            last -= 1
+        # 없다면 맨뒤에 새로운 원소를 할당    
+        A[last+1] = newitem
+```
+
+Running time
+
+​	$O(1) + O(2) + ... + O(n-1) = O(\frac{n(n-1)}{2})$이다.
+
+
 
 ### Quicksort (increasing order) 
 
@@ -201,7 +266,7 @@ heapify(A, i)
 build_heap(A)	
 	A.heapsize = |A|
     for i = A.length / 2 downto 1 
-    	heapify(i)- 
+    	heapify(A,i) 
         
 # divide and conquer
 make_heap(A, i)
@@ -230,7 +295,7 @@ HS(A)
 	for i = |A| downto 2 
     	swap(A[1], A[i])
         A.heapsize -= 1
-        heapify(A,i)
+        heapify(A,1)
 ```
 
 heapify: $T(n) = T(n/2) + 1 = O(logn)$  
@@ -759,7 +824,9 @@ Queue를 이용하여 search 혹은 shortest path 찾음
 ```python
 BFS(G, s)
 	let visited[1 ..|G.V|] be a boolean array and all initialized by False
-	create queue Q
+    for v in G.V
+    	visited[v] = False
+	create queue Q    
 	Q.push(s)
 	visited[s] = True
 
@@ -801,8 +868,10 @@ because recursive call means using a stack in our main memory(stack field)
 ```python
 # iterative version
 DFS(G, s)
-	let visited[1 ..|G.V|] be a boolean array and all initialized by False
-	create stack S
+	let visited[1 ..|G.V|] be a boolean array and all initialized by False	
+    for v in G.V
+    	visited[v] = False
+    create stack S
 	S.push(s)
 	visited[s] = True
 
