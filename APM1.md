@@ -182,7 +182,7 @@ heapify(A, i)
 build_heap(A)	
 	A.heapsize = |A|
     for i = A.length / 2 downto 1 
-    	heapify(i)- 
+    	heapify(i) 
         
 # divide and conquer
 make_heap(A, i)
@@ -211,7 +211,7 @@ HS(A)
 	for i = |A| downto 2 
     	swap(A[1], A[i])
         A.heapsize -= 1
-        heapify(A,i)
+        heapify(A,1)
 ```
 
 heapify: $T(n) = T(n/2) + 1 = O(logn)$  
