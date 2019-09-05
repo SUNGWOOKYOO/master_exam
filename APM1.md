@@ -649,7 +649,8 @@ $A_n$ 값을 찾으면 된다.
 # recursive version 
 def Recursive_Greedy(s,f,k,n)
     m = k+1
-    # Find appropriate m for using optimal sol 
+    # Find appropriate m for using optimal sol
+    # m은 compatible한 activity중  finishing time이 가장 빠른 activity index 
     while m <= n and s[m] < f[k]
         m = m + 1 
     
