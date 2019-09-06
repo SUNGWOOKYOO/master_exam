@@ -65,7 +65,7 @@ QS(a, p, r)
     
     # divide and conquer
     QS(a, p, q-1)
-    QS(a, q, r)	
+    QS(a, q+1, r)	
 ```
 
 randomized quick sort가 아닐 경우 **worst case time complexity** 
