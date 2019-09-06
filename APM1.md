@@ -509,10 +509,10 @@ knapsack(V, W)
     maxW = max(W)
 	let c[0..n, 0..maxW] be a new array
     all c[..] initialized by -INF
-    # base case
     for i = 0 to n
-    	for w to maxW
+    	for w = 0 to maxW
         	if i==0 || w==0
+            	# base case 
             	c[i,w] = 0
             else
 				if W[i] > w
