@@ -14,6 +14,34 @@
 
 [c++ ](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Cplus/Sort.cpp)  [python](https://github.com/SUNGWOOKYOO/Algorithm/blob/master/src_Python/sw_sort.ipynb)
 
+### Insertion sort
+
+incremental하게 하나씩 원소를 삽입하며 정렬하는 방식
+
+즉, $j$ 번째 이전에 이미 정렬되어있는 상태에서 $A_j$를 삽입한후 제자리를 찾아가는 방식
+
+![](./image/insert.PNG)
+
+```python
+insert(A, j, key)
+	i = j - 1
+    while i > 0 and A[i] > key
+    	A[i+1] = A[i]
+        i = i - 1
+    A[i+1] = key
+    
+
+IS(A)
+    for j = 2 to n 
+        insert(a, j, a[j])
+```
+
+
+
+[blog](https://www.oreilly.com/library/view/algorithms-in-a/9780596516246/ch04s02.html)
+
+
+
 ### Quicksort (increasing order) 
 
 ### ![qs](./image/quicksort_partition.PNG)
@@ -621,7 +649,8 @@ $A_n$ 값을 찾으면 된다.
 # recursive version 
 def Recursive_Greedy(s,f,k,n)
     m = k+1
-    # Find appropriate m for using optimal sol 
+    # Find appropriate m for using optimal sol
+    # m은 compatible한 activity중  finishing time이 가장 빠른 activity index 
     while m <= n and s[m] < f[k]
         m = m + 1 
     
