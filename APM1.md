@@ -1064,7 +1064,7 @@ $ l_{ij}^{(m)}$ node $i$ 부터 node $j$ 까지 가는데 최대  $m$ 개의 edg
 >
 > 이때, 총 노드의수 를 $n$ 이라하면, 거쳐가는 edge의 수 $m$이 $n-1$보다 많으면 반복되는 node가 존재한다는 뜻이므로 cycle이 있다는 뜻인데, negative edge가 없다고 가정했으므로 당연히 cycle을 돌면 shortest path의 wieght sum 보다 높은 path sum이 된다.  즉, $m = n - 1$ 까지 update하면 optimal solution이 됨
 
-$ {min}{(l_{ij}^{(m-1)},  \underset{1 \le k \le n}{min}{(l_{ij}^{(m-1)} + w_{kj} )} )}  = \underset{1 \le k \le n}{min}{(l_{ij}^{(m-1)} + w_{kj} )} ~~~~ \text{if } m \ge 1$ 
+$ {min}{(l_{ij}^{(m-1)},  \underset{1 \le k \le n}{min}{(l_{ik}^{(m-1)} + w_{kj} )} )}  = \underset{1 \le k \le n}{min}{(l_{ik}^{(m-1)} + w_{kj} )} ~~~~ \text{if } m \ge 1$ 
 
 $\because k = j $ 이면 $w_{jj}=0$ 이 되므로 case가 합쳐질수 있다. 
 
@@ -1072,7 +1072,7 @@ $\because k = j $ 이면 $w_{jj}=0$ 이 되므로 case가 합쳐질수 있다.
 $$
 l_{ij}^{(m)} =
 \begin{cases}
-\underset{1 \le k \le n}{min}{(l_{ij}^{(m-1)} + w_{kj})} & \text{if } m \ge 1  \\
+\underset{1 \le k \le n}{min}{(l_{ik}^{(m-1)} + w_{kj})} & \text{if } m \ge 1  \\
 l_{ij}^{(0) } = 
 	\begin{cases} 
 		0 & \text{if } i = j\\ 
