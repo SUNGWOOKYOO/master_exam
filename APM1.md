@@ -65,7 +65,7 @@ QS(a, p, r)
     
     # divide and conquer
     QS(a, p, q-1)
-    QS(a, q, r)	
+    QS(a, q+1, r)	
 ```
 
 randomized quick sort가 아닐 경우 **worst case time complexity** 
@@ -495,30 +495,27 @@ lookup(V, W, c, i, w)
     	c[i,w] = max(V[i] + c[i-1, w-W[i]], c[i-1, w])
 		return c[i,w]
 
-knapsack(V, W)
+knapsack(V, W, maxW)
 	n = |V|
-    # maxW = max(W[1],..,W[n])
-    maxW = max(W)
 	let c[0..n, 0..maxW] be a new array
     all c[..] initialized by -INF
     return lookup(V, W, c, n, maxW)
         
 # bottom up
-knapsack(V, W)
+knapsack(V, W, maxW)
     n = |V|
-    maxW = max(W)
 	let c[0..n, 0..maxW] be a new array
     all c[..] initialized by -INF
-    # base case
     for i = 0 to n
-    	for w to maxW
+    	for w = 0 to maxW
         	if i==0 || w==0
+            	# base case 
             	c[i,w] = 0
             else
 				if W[i] > w
                 	c[i,w] = c[i-1, w]
                 else
-                	c[i,w] = c[i-1, w]
+                	c[i,w] = max(V[i] + c[i-1, w-W[i]], c[i-1, w])
     return c[n, maxW]
 ```
 
@@ -693,9 +690,8 @@ notation은 [0-1 knapsack problem](#0 - 1-knapsack) 과 동일
 
 ```python
 # assume that V[i], W[i] sort by decreasing order with (V[i]/W[i])
-knapsack(V, W) {
+knapsack(V, W, maxW) {
     n = |V|
-    maxW = max(W)
 	residualw = maxW;
     profit = 0
 	for i = 1 to n
